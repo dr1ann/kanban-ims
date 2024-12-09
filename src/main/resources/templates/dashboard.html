@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head> 
+    <title>Dashboard | IMS</title> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <link rel="stylesheet" th:href="@{css/output.tailwind.css}">
+    <link rel="stylesheet" th:href="@{/css/data-tables.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{css/other-styles.css}">
+</head>
+    <body class="bg-[#F0F1F3]">
+        <div th:replace="fragments/navbar :: navbar"></div>
+        <div th:replace="fragments/sidebar :: sidebar"></div>
+        <div id="container" class="p-4 lg:ml-64">
+            <div class="p-2">
+                <div class="flex py-3 mt-6 lg:mt-10 overflow-x-auto whitespace-nowrap font-montserrat" aria-label="Breadcrumb">
+                    <ol class="inline-flex items-center rtl:space-x-reverse">
+                        <li class="inline-flex items-center">
+                            <img class="mr-1" th:src="@{/images/dashboard-icon-highlight.png}" alt="Dashboard Icon">
+                            <span class="text-sm font-medium text-[#1366D9]">Dashboard</span>
+                        </li>
+                    </ol>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                    <div class="bg-white  drop-shadow-sm rounded-md p-4">
+                        <h1 class="text-gray-700 font-medium text-base mb-6 mt-1 mx-[.4rem]">Inventory Summary</h1>
+                        <div class="flex flex-row items-center justify-evenly  gap-6 text-center text-sm">
+                            <div class="flex flex-col items-center justify-center">
+                                <img th:src="@{/images/quantity-in-hand.png}" class="w-[1.5rem] h-[1.5rem] mb-3" alt="Quantity icon">
+                                <span class="font-medium" th:text="${totalQuantity}"></span>
+                                <span>Quantity in hand</span>
+                            </div>
+                            <div class="flex flex-col items-center justify-center">
+                                <img th:src="@{/images/on-the-way.png}" class="w-[1.5rem] h-[1.5rem] mb-3" alt="Quantity icon">
+                                <span class="font-medium" th:text="${quantitiesToBeRecieved}"></span>
+                                <span>To be received</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white  drop-shadow-sm rounded-md p-4">
+                        <div class="flex justify-between gap-6">
+                            <h1 class="text-gray-700 font-medium text-base mb-6 mt-1 mx-[.4rem]">Low Quantity Stock</h1>
+                            <a href="/inventory/products" class="hover:underline text-sm font-medium text-[#1366D9]">View All</a>
+                        </div>
+                        
+                        <ul th:if="${!lowQuantityProducts.isEmpty}" th:each="product : ${lowQuantityProducts}" class="grid grid-cols-2 place-items-center gap-3">
+                            <li class="flex-col gap-1">
+                                <h1 class="text-gray-700 font-medium" th:text="${product.name}"></h1>
+                                <span class="text-[#667085] text-sm" th:text=" 'Remaining Quantity: ' + ${product.quantity}"></span>
+                            </li>
+                        </ul>
+                        <h2 th:if="${lowQuantityProducts.isEmpty}" class="text-sm text-[#667085] text-center font-medium mt-4">All stock levels are sufficient.<br> No low-stock products at the moment.</h2>
+                    </div>
+                    <div class="bg-white  drop-shadow-sm rounded-md p-4">
+                        <h1 class="text-gray-700 font-medium text-base mb-6 mt-1 mx-[.4rem]">Purchase Overview</h1>
+                        <div class="flex flex-row items-center justify-evenly  gap-6 text-center text-sm">
+                            <div class="flex flex-col items-center justify-center">
+                                <img th:src="@{/images/purchase.png}" class="w-[1.5rem] h-[1.5rem] mb-3" alt="Quantity icon">
+                                <span class="font-medium" th:text="${purchaseCount}"></span>
+                                <span>Purchases</span>
+                            </div>
+                            <div class="flex flex-col items-center justify-center">
+                                <img th:src="@{/images/cost.png}" class="w-[1.5rem] h-[1.5rem] mb-3" alt="Quantity icon">
+                                <span class="font-medium" th:text=" '₱' + ${totalPurchaseCost}"></span>
+                                <span>Total Cost</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white  drop-shadow-sm rounded-md p-4">
+                        <h1 class="text-gray-700 font-medium text-base mb-6 mt-1 mx-[.4rem]">Supplier Summary</h1>
+                        <div class="flex flex-col items-center justify-center text-center text-sm">
+                            <img th:src="@{/images/supplier-sum.png}" class="w-[1.5rem] h-[1.5rem] mb-3" alt="Quantity icon">
+                            <span class="font-medium" th:text="${totalSuppliers}"></span>
+                            <span>No. of Suppliers</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 gap-4 mt-4">
+                    <div class="bg-white drop-shadow-sm rounded-md p-4">
+                        <h1 class="text-gray-700 font-medium text-xl mb-6 mt-1 mx-[.4rem]">Pending Purchase Orders</h1>
+                        <div th:replace="fragments/pending-orders-table :: pending-orders-table"></div>
+                    </div>
+                    <div class="bg-white drop-shadow-sm rounded-md p-4">
+                        <h1 class="text-gray-700 font-medium text-xl mb-6 mt-1 mx-[.4rem]">Top Selling Stocks</h1>
+                        <div th:replace="fragments/top-selling-products-table :: top-selling-products-table"></div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div th:replace="fragments/chatbot-faq :: chatbot-faq"></div> 
+    </body>
+    <script th:src="@{/js/chatbot-faq.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script>
+        $('.data-table').DataTable();
+    </script>
+</html>

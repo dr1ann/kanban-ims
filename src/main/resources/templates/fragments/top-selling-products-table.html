@@ -1,0 +1,24 @@
+<div th:fragment="top-selling-products-table">
+    <table class="data-table w-full text-sm text-left rtl:text-right text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 shadow drop-shadow-sm">
+            <tr>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Product Name
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Sold Quantity
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Total Amount
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="transaction : ${topSellingProducts}" class="bg-white border-b hover:bg-gray-50">
+                <td th:text="${transaction.product.name}" class="px-6 py-4"></td>
+                <td th:text="${transaction.quantity}" class="px-6 py-4"></td>
+                <th th:text="'₱' + ${transaction.formattedTotalAmount}"  scope="row" class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"></th>
+            </tr>
+        </tbody>
+    </table>
+</div>

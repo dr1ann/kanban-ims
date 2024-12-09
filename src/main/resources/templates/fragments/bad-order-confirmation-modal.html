@@ -1,0 +1,37 @@
+<div th:fragment="bad-order-confirmation-modal(order)">
+    <div th:id="'badOrderModal' + ${order.id}" tabindex="-1" aria-hidden="true" 
+        class="hidden fixed inset-0 z-50 justify-center items-center bg-black bg-opacity-50">
+        <div class="relative w-full max-w-md p-4">
+            <div class="relative p-4 text-center bg-white rounded-lg shadow sm:p-5">
+                <!-- Close Button -->
+                <button type="button" th:onclick="|closeModal('badOrderModal' + ${order.id})|" class="text-[#667085] absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+                <i class="text-[#667085] text-[2.75rem] mb-3.5 fa-solid fa-times-circle"></i>
+                <p class="mb-4 text-sm text-gray-500">
+                    <span th:utext="'Specify the quantity of defective items below.<br> This action will update the order status to reflect the delivered items and the reported defective items.'"></span>
+                    <br><br>
+                    This action makes the order (except status) <b>uneditable</b>.
+                </p>
+                <form th:action="@{/buy-order/edit-status/{id}(id=${order.id})}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="orderId" th:value="${order.id}">
+                    <input type="hidden" name="formType" value="badOrder">
+                    <div class="relative flex w-1/2 mx-auto mb-8">
+                        <input type="number" name="badOrderQuantity" id="badOrderQuantity" class="block px-2.5 pb-2 pt-3 w-full text-sm text-gray-700 bg-transparent rounded-lg border border-[#D0D5DD] focus:outline-none focus:ring-0 focus:border-[#1366D9] peer" placeholder="" autocomplete="off" required aria-label="Bad Order Quantity" />
+                        <label for="badOrderQuantity" class="absolute text-sm text-[#667085] duration-75 rounded-3xl bg-white mx-1 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-[#1366D9] peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4">Quantity</label>
+                    </div>
+                    <div class="flex justify-center items-center space-x-4">
+                        <button type="button" th:onclick="|closeModal('badOrderModal' + ${order.id})|"
+                        class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10">
+                        Cancel
+                        </button>
+                        <button type="submit" class="py-2 px-3 text-sm font-medium text-center text-white bg-green-500 rounded-lg hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300">
+                            Confirm
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

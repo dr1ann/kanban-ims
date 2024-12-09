@@ -1,0 +1,63 @@
+<div th:fragment="products-table">
+    <table class="data-table w-full text-sm text-left rtl:text-right text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 shadow drop-shadow-sm">
+            <tr>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Product ID
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Product Name
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Category
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Supplier Price
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Selling Price
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Quantity
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Threshold Value
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Availability
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="product : ${products}" class="bg-white border-b hover:bg-gray-50">
+                <td th:text="${product.id}" class="px-6 py-4"></td>
+                <th th:text="${product.name}" scope="row" class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"></th>
+                <td th:text="${product.category?.name ?: 'Uncategorized'}" class="px-6 py-4"></td>
+
+                <td th:text="${'₱' + product.formattedBuyingPrice}" class="px-6 py-4"></td>
+                <td th:text="${'₱' + product.formattedSellingPrice}" class="px-6 py-4"></td>
+                <td th:text="${product.formattedQuantity} + ' ' + ${product.unit}" class="px-6 py-4"></td>
+                <td th:text="${product.formattedThreshold} + ' ' + ${product.unit}" class="px-6 py-4"></td>
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-[7px]">
+                        <span th:text="${product.stockStatus}" th:classappend="${product.quantity == 0 ? 'text-[#DA3E33]' : product.quantity < product.threshold ? 'text-[#E19133]' : 'text-[#10A760]'}"></span>
+                        <a th:href="@{/buy-order/reorder(productId=${product.id})}" th:if="${product.needsReorder() and filteredInventoryList.contains(product)}" class="shadow px-2 py-1 rounded-lg border border-[#D0D5DD] text-[#5D6679]  hover:text-[#1366D9]">
+                            <i class="fa-solid fa-rotate-left hover:underline"></i>
+                        </a>
+                    </div>
+                </td>
+                <td class="px-6 py-4 flex items-center gap-4">
+                    <a th:href="@{/inventory/edit-product/{id}(id=${product.id})}" class="shadow text-sm bg-[#1366D9] px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9]">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </a>  
+                    <!-- <button th:id="'deleteProductButton' + ${product.id}" type="button" data-th-attr="data-modal-target='deleteProductModal' + ${product.id}, data-modal-toggle='deleteProductModal' + ${product.id}" class="shadow text-sm bg-red-500 px-3 py-1 text-white rounded-lg border border-red-500 transition-colors duration-300 hover:bg-transparent hover:text-red-600">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button> -->
+                </td>                            
+            </tr>
+        </tbody>
+    </table>
+</div>

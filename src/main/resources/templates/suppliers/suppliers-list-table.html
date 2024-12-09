@@ -1,0 +1,56 @@
+<div th:fragment="suppliers-list-table">
+    <table class="data-table w-full text-sm text-left rtl:text-right text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 shadow drop-shadow-sm">
+            <tr>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Supplier Name
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Contact Number
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Contact Person
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Address
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                   Products Provided
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="supplier : ${suppliers}" class="bg-white border-b hover:bg-gray-50">
+                <th th:text="${supplier.name}" scope="row" class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"></th>
+                <td th:text="${supplier.contactNumber}" class="px-6 py-4"></td>
+                <td th:text="${supplier.contactPerson}" class="px-6 py-4"></td>
+                <td th:text="${supplier.address}" class="px-6 py-4"></td>
+                <td class="px-6 py-4">
+                    <div class="productList">
+                        <ul class="!list-disc">
+                            <li th:each="product, iterStat : ${supplier.getProductsProvided()}" 
+                                th:text="${product}" 
+                                th:classappend="${iterStat.index >= 3 ? 'hidden' : ''}">
+                            </li>
+                        </ul>
+                    </div>
+                    <button 
+                        class="text-xs underline text-[#1366D9]" 
+                        th:if="${#lists.size(supplier.getProductsProvided()) > 3}" 
+                        onclick="toggleProducts(this)">See More...</button>
+                </td>                
+                <td class="px-6 py-4 flex items-center gap-4">
+                    <a th:href="@{/suppliers/edit-supplier/{id}(id=${supplier.id})}" class="shadow text-sm bg-[#1366D9] px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9]">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </a>  
+                    <!-- <button th:id="'deleteSupplierButton' + ${supplier.id}" type="button" data-th-attr="data-modal-target='deleteSupplierModal' + ${supplier.id}, data-modal-toggle='deleteSupplierModal' + ${supplier.id}" class="shadow text-sm bg-red-500 px-3 py-1 text-white rounded-lg border border-red-500 transition-colors duration-300 hover:bg-transparent hover:text-red-600">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button> -->
+                </td>                           
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,64 @@
+<div th:fragment="chatbot-faq">
+    <button id="chatbotButton" class="fixed bottom-4 right-4 bg-[#1366D9] border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9] text-white p-3 rounded-full shadow-lg" onclick="toggleChatbot()">
+        <i class="fa-solid fa-robot p-[2px]"></i>
+    </button>
+
+    <div id="chatbot" class="hidden fixed bottom-[4.6rem] right-4 max-h-[28rem] bg-white shadow-lg w-fit sm:w-full max-w-xs sm:max-w-md rounded-lg flex-col">
+        <div class="flex justify-between gap-6 p-4 bg-[#1366D9] text-white rounded-t-lg">
+            <div>
+                <h3 class="text-lg font-medium"><i class="fa-solid fa-robot p-[2px]"></i> Chatbot</h3>
+                <p class="text-sm">Click on a question to get an answer</p>
+            </div>
+            <button 
+            class=" absolute top-2.5 right-2.5 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+            onclick="toggleChatbot()">
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            </button>
+        </div>
+        <div id="chat-window" class="flex-1 p-4 overflow-y-auto space-y-4 bg-gray-50">
+            <div class="flex items-start space-x-2">
+                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
+                    <i class="text-xs fa-solid fa-robot p-[2px]"></i>
+                </div>
+                <div class="bg-blue-100 text-gray-800 p-3 rounded-lg max-w-xs">
+                    <p>Hello! How can I assist you today?</p>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 bg-gray-100 border-t space-y-2">
+            <p class="text-sm font-semibold text-gray-600">FAQs:</p>
+            <div class="grid grid-cols-1 place-items-start place-content-start gap-3 max-h-28 overflow-auto">
+                <button 
+                class="block w-full text-left bg-[#1366D9] shadow px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9] mb-2"
+                onclick="faqClick('How do I reorder a product?', 'To reorder a product, navigate to the Products List section and click the button next to the stock status of the product you wish to reorder. Please note that reordering is only available for products that are listed under the supplier provided products. If the product is not listed, you will not be able to reorder or create a new order.')">
+                How do I reorder a product?
+            </button>
+            <button 
+                class="block w-full text-left bg-[#1366D9] shadow px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9] mb-2"
+                onclick="faqClick('Why do some of the product categories not have a remove button?', 'Because categories with products cannot be deleted. Only empty categories are removable.')">
+                Why do some of the product categories not have a remove button?
+            </button>
+            <button 
+                class="block w-full text-left bg-[#1366D9] shadow px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9] mb-2"
+                onclick="faqClick('What\'s the basis for determining if a product is low stock, out of stock, or in stock?', 'The stock status is based on the threshold value you input when adding a new product. If the stock quantity falls below this threshold, the product is marked as low stock. If there are no items available in the inventory, it is marked as out of stock. Products above the threshold are considered in stock.')">
+                What's the basis for determining if a product is low stock, out of stock, or in stock?
+            </button>
+            <button 
+                class="block w-full text-left bg-[#1366D9] shadow px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9] mb-2"
+                onclick="faqClick('Why doesn\'t the system list all the products when I add a new order in the purchase order?', 'Only products that are provided by suppliers and have low stock or no stock are eligible for ordering. This ensures that you can restock products that are in demand or out of stock, rather than those already fully stocked.')">
+                Why doesn't the system list all the products when I add a new order in the purchase order?
+            </button>
+            <button 
+                class="block w-full text-left bg-[#1366D9] shadow px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9] mb-2"
+                onclick="faqClick('Why doesn\'t the system list all the products when I add a new order in the sales order?', 'Only products that are marked as \'In Stock\' are available for ordering in the sales order. This ensures that only products that are available for immediate sale are listed.')">
+                Why doesn't the system list all the products when I add a new order in the sales order?
+            </button>
+            <button 
+                class="block w-full text-left bg-[#1366D9] shadow px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9]"
+                onclick="faqClick('How can I ensure product and order consistency in my system?', 'To ensure consistency, regularly update stock levels, confirm supplier details, and verify buying prices. Use reports to track discrepancies and orders.')">
+                How can I ensure product and order consistency in my system?
+            </button>
+            </div>
+        </div>
+    </div>
+</div>

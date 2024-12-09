@@ -1,0 +1,36 @@
+<div th:fragment="pending-orders-table">
+    <table class="data-table w-full text-sm text-left rtl:text-right text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 shadow drop-shadow-sm">
+            <tr>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Order ID
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Product Name
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Quantity
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Order Amount
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Order Date
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Supplier
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="order : ${orders}" class="bg-white border-b hover:bg-gray-50">
+                <td th:text="${order.id}" class="px-6 py-4"></td>
+                <th th:text="${order.getProduct().name}" scope="row" class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"></th>
+                <td th:text="${order.formattedQuantity}" class="px-6 py-4"></td>
+                <td th:text="${'₱' + order.formattedTotalAmount}" class="px-6 py-4"></td>
+                <td th:text="${order.formattedOrderDate}" class="px-6 py-4"></td>
+                <td th:text="${order.supplier.name}" class="px-6 py-4"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

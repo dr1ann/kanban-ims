@@ -1,0 +1,42 @@
+<div th:fragment="product-categories-table">
+    <table class="data-table w-full text-sm text-left rtl:text-right text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 shadow drop-shadow-sm">
+            <tr>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Category ID
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Category Name
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Description
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="category : ${categories}" class="bg-white border-b hover:bg-gray-50">
+                <td th:text="${category.id}" class="px-6 py-4"></td>
+                <th th:text="${category.name}" scope="row" class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"></th>
+                <td th:if="${category.description != ''}" class="px-6 py-4">
+                    <div class="categoryDescription truncate-description">
+                        <span class="shortDesc break-words" th:text="${#strings.length(category.description) > 100 ? #strings.substring(category.description, 0, 100) + '...' : category.description}"></span>
+                        <span class="fullDesc hidden break-words" th:text="${category.description}"></span>
+                    </div>
+                    <button class="text-xs underline text-[#1366D9] toggleButton" th:if="${#strings.length(category.description) > 100}"  onclick="toggleDescription(this)">Read More...</button>
+                </td>
+                <td th:if="${category.description == ''}" class="px-6 py-4">N/A</td>
+                <td class="px-6 py-4 flex items-center gap-4">
+                    <a th:href="@{/inventory/edit-product-category/{id}(id=${category.id})}" class="shadow text-sm bg-[#1366D9] px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9]">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </a>  
+                    <button th:if="${!categoryProductStatus[category.id]}" th:id="'deleteProductCategoryButton' + ${category.id}" type="button" data-th-attr="data-modal-target='deleteProductCategoryModal' + ${category.id}, data-modal-toggle='deleteProductCategoryModal' + ${category.id}" class="shadow text-sm bg-red-500 px-3 py-1 text-white rounded-lg border border-red-500 transition-colors duration-300 hover:bg-transparent hover:text-red-600">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                </td>                            
+            </tr>
+        </tbody>
+    </table>
+</div>

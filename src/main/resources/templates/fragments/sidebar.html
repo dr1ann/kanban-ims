@@ -1,0 +1,101 @@
+<div th:fragment="sidebar">    
+    <aside id="default-sidebar" class="bg-gray-50 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full lg:translate-x-0" aria-label="Sidebar">
+        <div class="h-full flex flex-col px-3 py-4 overflow-y-auto">
+            <div>
+                <a href="/dashboard" class="flex items-center ps-2.5 mb-5">
+                    <img th:src="@{/images/smallogo.png}" class="cursor-pointer self-center w-[3rem] h-auto" alt="Logo">
+                    <span class="self-center ml-3 text-xl font-semibold whitespace-nowrap text-[#1366D9]">KANBAN</span>
+                </a>
+                <ul class="space-y-4 text-sm">
+                    <li>
+                        <a href="/dashboard" th:class="${currentPage == '/dashboard'} ? 'flex items-center p-2 text-[#1570EF] font-medium rounded-lg bg-gray-200 group' : 'font-normal flex items-center p-2 text-gray-700 rounded-lg hover:bg-gray-100 group'">
+                            <img th:src="${currentPage == '/dashboard'} ? '/images/dashboard-icon-highlight.png' : '/images/dashboard-icon.png'" alt="Dashboard Icon">
+                            <span class="ms-3">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <button type="button" id="toggle-dropdown-inv" class="font-normal flex items-center w-full p-2 text-gray-700 transition duration-75 rounded-lg group hover:bg-gray-100" aria-controls="dropdown-list-inv" data-collapse-toggle="dropdown-list-inv">
+                            <img class="mr-1" th:src="@{/images/inventory-icon.png}" alt="Inventory Icon">
+                              <span class="flex-1 ms-3 text-left  whitespace-nowrap">Inventory Maintenance</span>
+                              <svg class="w-[9px] h-[9px]" id="dropdown-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                              </svg>
+                        </button>
+                        <ul id="dropdown-list-inv" class="hidden py-2 space-y-2">
+                            <li>
+                                <a href="/inventory/products" th:class="${currentPage == '/products'} ? 'active-item-inv flex items-center p-2 pl-11 text-[#1570EF] font-medium rounded-lg bg-gray-200 group' : 'font-normal flex items-center p-2 pl-11 text-[#667085] rounded-lg hover:bg-gray-100 group'">Products List</a>
+                            </li>
+                            <li>
+                                <a href="/inventory/add-product" th:class="${currentPage == '/add-product'} ? 'active-item-inv flex items-center p-2 pl-11 text-[#1570EF] font-medium rounded-lg bg-gray-200 group' : 'font-normal flex items-center p-2 pl-11 text-[#667085] rounded-lg hover:bg-gray-100 group'">Add Product</a>
+                            </li>
+                            <li>
+                                <a href="/inventory/categories" th:class="${currentPage == '/categories'} ? 'active-item-inv flex items-center p-2 pl-11 text-[#1570EF] font-medium rounded-lg bg-gray-200 group' : 'font-normal flex items-center p-2 pl-11 text-[#667085] rounded-lg hover:bg-gray-100 group'">Product Categories List</a>
+                            </li>
+                            <li>
+                                <a href="/inventory/add-product-category" th:class="${currentPage == '/add-cat'} ? 'active-item-inv flex items-center p-2 pl-11 text-[#1570EF] font-medium rounded-lg bg-gray-200 group' : 'font-normal flex items-center p-2 pl-11 text-[#667085] rounded-lg hover:bg-gray-100 group'">Add Product Category</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/reports" th:class="${currentPage == '/reports'} ? 'flex items-center p-2 text-[#1570EF] font-medium rounded-lg bg-gray-200 group' : 'font-normal flex items-center p-2 text-gray-700 rounded-lg hover:bg-gray-100 group'">
+                            <img th:src="${currentPage == '/reports'} ? '/images/reports-icon-highlight.png' : '/images/reports-icon.png'" alt="Reports Icon">
+                            <span class="ms-3">Reports</span>
+                        </a>
+                    </li>
+                    <li>
+                        <button type="button" id="toggle-dropdown-sup" class="font-normal flex items-center w-full p-2 text-gray-700 transition duration-75 rounded-lg group hover:bg-gray-100" aria-controls="dropdown-list-sup" data-collapse-toggle="dropdown-list-sup">
+                            <img class="mr-1" th:src="@{/images/suppliers-icon.png}" alt="Supplier Icon">
+                              <span class="flex-1 ms-3 text-left  whitespace-nowrap">Supplier Maintenance</span>
+                              <svg class="w-[9px] h-[9px]" id="dropdown-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                              </svg>
+                        </button>
+                        <ul id="dropdown-list-sup" class="hidden py-2 space-y-2">
+                            <li>
+                                <a href="/suppliers/list" th:class="${currentPage == '/suppliers'} ? 'active-item-sup flex items-center p-2 pl-11 text-[#1570EF] font-medium rounded-lg bg-gray-200 group' : 'font-normal flex items-center p-2 pl-11 text-[#667085] rounded-lg hover:bg-gray-100 group'">Suppliers List</a>
+                            </li>
+                            <li>
+                                <a href="/suppliers/add" th:class="${currentPage == '/add-supplier'} ? 'active-item-sup flex items-center p-2 pl-11 text-[#1570EF] font-medium rounded-lg bg-gray-200 group' : 'font-normal flex items-center p-2 pl-11 text-[#667085] rounded-lg hover:bg-gray-100 group'">Add Supplier</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <button type="button" id="toggle-dropdown-buy" class="font-normal flex items-center w-full p-2 text-gray-700 transition duration-75 rounded-lg group hover:bg-gray-100" aria-controls="dropdown-list-buy" data-collapse-toggle="dropdown-list-buy">
+                            <img class="mr-1" th:src="@{/images/buy-icon.png}" alt="Buy Icon">
+                              <span class="flex-1 ms-3 text-left  whitespace-nowrap">Purchase Order</span>
+                              <svg class="w-[9px] h-[9px]" id="dropdown-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                              </svg>
+                        </button>
+                        <ul id="dropdown-list-buy" class="hidden py-2 space-y-2">
+                            <li>
+                                <a href="/buy-order/list" th:class="${currentPage == '/buy-order'} ? 'active-item-buy flex items-center p-2 pl-11 text-[#1570EF] font-medium rounded-lg bg-gray-200 group' : 'font-normal flex items-center p-2 pl-11 text-[#667085] rounded-lg hover:bg-gray-100 group'">Transactions</a>
+                            </li>
+                            <li>
+                                <a href="/buy-order/add" th:class="${currentPage == '/add-buy-order'} ? 'active-item-buy flex items-center p-2 pl-11 text-[#1570EF] font-medium rounded-lg bg-gray-200 group' : 'font-normal flex items-center p-2 pl-11 text-[#667085] rounded-lg hover:bg-gray-100 group'">Add Order</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <button type="button" id="toggle-dropdown-sell" class="font-normal flex items-center w-full p-2 text-gray-700 transition duration-75 rounded-lg group hover:bg-gray-100" aria-controls="dropdown-list-sell" data-collapse-toggle="dropdown-list-sell">
+                            <img class="mr-1" th:src="@{/images/sell-icon.png}" alt="Sell Icon">
+                              <span class="flex-1 ms-3 text-left  whitespace-nowrap">Sales Order</span>
+                              <svg class="w-[9px] h-[9px]" id="dropdown-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                              </svg>
+                        </button>
+                        <ul id="dropdown-list-sell" class="hidden py-2 space-y-2">
+                            <li>
+                                <a href="/sell-order/list" th:class="${currentPage == '/sell-order'} ? 'active-item-sell flex items-center p-2 pl-11 text-[#1570EF] font-medium rounded-lg bg-gray-200 group' : 'font-normal flex items-center p-2 pl-11 text-[#667085] rounded-lg hover:bg-gray-100 group'">Transactions</a>
+                            </li>
+                            <li>
+                                <a href="/sell-order/add" th:class="${currentPage == '/add-sell-order'} ? 'active-item-sell flex items-center p-2 pl-11 text-[#1570EF] font-medium rounded-lg bg-gray-200 group' : 'font-normal flex items-center p-2 pl-11 text-[#667085] rounded-lg hover:bg-gray-100 group'">Add Order</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </aside>
+    <script th:src="@{/js/sidebar.js}"></script>    
+</div>

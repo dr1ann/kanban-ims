@@ -1,0 +1,24 @@
+::-webkit-scrollbar {
+    height: 0.3rem;
+    width: 0.3rem;
+  }
+  @media (min-width: 1024px) {
+    ::-webkit-scrollbar {
+      height: 0.6rem;
+      width: 0.6rem;
+    }
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    height: 0.5rem;
+    background: #d9d9d9;
+    -webkit-transition: background-color 0.3s;
+    transition: background-color 0.3s;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a0a0a0;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
