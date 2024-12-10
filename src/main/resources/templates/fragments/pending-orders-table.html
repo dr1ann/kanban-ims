@@ -25,7 +25,7 @@
         <tbody>
             <tr th:each="order : ${orders}" class="bg-white border-b hover:bg-gray-50">
                 <td th:text="${order.id}" class="px-6 py-4"></td>
-                <th th:text="${order.getProduct().name}" scope="row" class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"></th>
+                <th th:text="${order.getProduct().name}" scope="row" class="px-6 py-4 font-medium text-gray-700"></th>
                 <td th:text="${order.formattedQuantity}" class="px-6 py-4"></td>
                 <td th:text="${'₱' + order.formattedTotalAmount}" class="px-6 py-4"></td>
                 <td th:text="${order.formattedOrderDate}" class="px-6 py-4"></td>

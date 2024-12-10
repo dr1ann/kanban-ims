@@ -8,4 +8,6 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
 
     @SuppressWarnings("null")
     Optional<ProductCategory> findById(Long id);
+    boolean existsByNameIgnoreCase(String productCategoryName);
+    boolean existsByNameIgnoreCaseAndIdNot(String productCategoryName, Long excludeId);
 }

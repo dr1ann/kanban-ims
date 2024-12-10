@@ -31,6 +31,14 @@ public class ProductCategoryService {
                 .orElseThrow(() -> new IllegalArgumentException("Product Category with ID " + id + " not found"));
     }
 
+    public boolean doesProductCategoryExist(String productCategoryName) {
+        return productCategoryRepository.existsByNameIgnoreCase(productCategoryName);
+    }
+
+    public boolean doesProductCategoryExistNotSelf(String productCategoryName, Long excludeId) {
+        return productCategoryRepository.existsByNameIgnoreCaseAndIdNot(productCategoryName, excludeId);
+    }
+
     public ProductCategory updateProductCategory(Long id, ProductCategory updatedProductCategory) {
         ProductCategory existingProductCategory = getProductCategoryById(id);
     

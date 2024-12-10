@@ -39,7 +39,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white  drop-shadow-sm rounded-md p-4">
+                    <div class="bg-white drop-shadow-sm rounded-md p-4">
                         <div class="flex justify-between gap-6">
                             <h1 class="text-gray-700 font-medium text-base mb-6 mt-1 mx-[.4rem]">Low Quantity Stock</h1>
                             <a href="/inventory/products" class="hover:underline text-sm font-medium text-[#1366D9]">View All</a>
@@ -49,6 +49,9 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                             <li class="flex-col gap-1">
                                 <h1 class="text-gray-700 font-medium" th:text="${product.name}"></h1>
                                 <span class="text-[#667085] text-sm" th:text=" 'Remaining Quantity: ' + ${product.quantity}"></span>
+                                <a th:href="@{/buy-order/reorder(productId=${product.id})}" class="shadow px-2 py-1 rounded-lg border border-[#D0D5DD] text-[#5D6679]  hover:text-[#1366D9]">
+                                    <i class="fa-solid fa-rotate-left hover:underline"></i>
+                                </a>
                             </li>
                         </ul>
                         <h2 th:if="${lowQuantityProducts.isEmpty}" class="text-sm text-[#667085] text-center font-medium mt-4">All stock levels are sufficient.<br> No low-stock products at the moment.</h2>
@@ -82,10 +85,6 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                     <div class="bg-white drop-shadow-sm rounded-md p-4">
                         <h1 class="text-gray-700 font-medium text-xl mb-6 mt-1 mx-[.4rem]">Pending Purchase Orders</h1>
                         <div th:replace="fragments/pending-orders-table :: pending-orders-table"></div>
-                    </div>
-                    <div class="bg-white drop-shadow-sm rounded-md p-4">
-                        <h1 class="text-gray-700 font-medium text-xl mb-6 mt-1 mx-[.4rem]">Top Selling Stocks</h1>
-                        <div th:replace="fragments/top-selling-products-table :: top-selling-products-table"></div>
                     </div>
                 </div>
             </div>

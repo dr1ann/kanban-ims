@@ -2,7 +2,10 @@
     <header class="p-0 lg:p-4 fixed w-full top-0 left-[max(0px,calc(50%-64.0625rem))] z-20 bg-gray-50 text-gray-700">
         <div class="flex items-center justify-end px-0 lg:px-4 py-2 lg:py-0 relative">
             <button id="profile-dropdown" type="button" class="relative flex flex-col items-center focus:outline-none">
-                <img th:src="@{/images/gwapo.jpg}" class="w-[2rem] h-auto me-2 lg:me-0 rounded-full" alt="Profile Icon">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-[2rem] h-auto me-2 lg:me-0 rounded-full bg-gray-100 p-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="7" r="4" />
+                    <path d="M4 21c0-4 8-7 8-7s8 3 8 7" />
+                </svg>
                 <span class="absolute bottom-0 right-0 transform translate-y-1/2 p-1 text-gray-500 hover:bg-gray-200 rounded-full bg-gray-100">
                     <img th:src="@{/images/arrow-down.png}" class="w-[.5rem] h-auto rounded-full" alt="Profile Icon">
                 </span>

@@ -17,7 +17,7 @@
             <tr th:each="transaction : ${topSellingProducts}" class="bg-white border-b hover:bg-gray-50">
                 <td th:text="${transaction.product.name}" class="px-6 py-4"></td>
                 <td th:text="${transaction.quantity}" class="px-6 py-4"></td>
-                <th th:text="'₱' + ${transaction.formattedTotalAmount}"  scope="row" class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"></th>
+                <th th:text="'₱' + ${transaction.formattedTotalAmount}"  scope="row" class="px-6 py-4 font-medium text-gray-700"></th>
             </tr>
         </tbody>
     </table>

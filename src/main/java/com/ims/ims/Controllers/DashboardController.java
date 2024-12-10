@@ -4,19 +4,15 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-
 import com.ims.ims.Entities.BuyOrder;
 import com.ims.ims.Entities.Inventory;
-import com.ims.ims.Entities.SellOrder;
 import com.ims.ims.Entities.Supplier;
 import com.ims.ims.Services.BuyOrderService;
 import com.ims.ims.Services.InventoryService;
-import com.ims.ims.Services.SellOrderService;
+
 import com.ims.ims.Services.SupplierService;
 
 import org.springframework.ui.Model;
@@ -32,8 +28,7 @@ public class DashboardController {
     @Autowired
     private SupplierService supplierService;
 
-    @Autowired
-    private SellOrderService sellOrderService;
+
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
@@ -42,11 +37,8 @@ public class DashboardController {
         List<Inventory> lowQuantityProducts = new ArrayList<>();
         List<Inventory> inventoryList = inventoryService.getAllInventoryItems();
         List<Supplier> suppliers = supplierService.getAllSuppliers();
-        List<SellOrder> productSales = sellOrderService.getAllSellOrders();
-        List<SellOrder> topSellingProducts = productSales.stream()
-        .filter(product -> "Confirmed".equals(product.getStatus())) 
-        .sorted((p1, p2) -> Double.compare(p2.getTotalAmount(), p1.getTotalAmount())) 
-        .collect(Collectors.toList());
+
+
     
         
         DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
@@ -92,7 +84,6 @@ public class DashboardController {
         model.addAttribute("totalQuantity", numberFormat.format(totalQuantity));
         model.addAttribute("quantitiesToBeRecieved", numberFormat.format(quantitiesToBeRecieved));
         model.addAttribute("lowQuantityProducts", lowQuantityProducts);
-        model.addAttribute("topSellingProducts", topSellingProducts);
         model.addAttribute("orders", pendingBuyOrders);
         model.addAttribute("currentPage", "/dashboard");
         return "dashboard";

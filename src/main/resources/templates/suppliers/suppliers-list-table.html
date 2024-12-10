@@ -24,7 +24,7 @@
         </thead>
         <tbody>
             <tr th:each="supplier : ${suppliers}" class="bg-white border-b hover:bg-gray-50">
-                <th th:text="${supplier.name}" scope="row" class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"></th>
+                <th th:text="${supplier.name}" scope="row" class="px-6 py-4 font-medium text-gray-700"></th>
                 <td th:text="${supplier.contactNumber}" class="px-6 py-4"></td>
                 <td th:text="${supplier.contactPerson}" class="px-6 py-4"></td>
                 <td th:text="${supplier.address}" class="px-6 py-4"></td>

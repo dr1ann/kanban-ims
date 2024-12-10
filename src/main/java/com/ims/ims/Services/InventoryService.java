@@ -35,7 +35,11 @@ public class InventoryService {
     
     public boolean doesProductExist(String productName) {
         return inventoryRepository.existsByNameIgnoreCase(productName);
-        }
+    }
+
+    public boolean doesProductExistNotSelf(String productName, Long excludeId) {
+        return inventoryRepository.existsByNameIgnoreCaseAndIdNot(productName, excludeId);
+    }
         
     public List<Inventory> getAllInventoryItems() {
         return inventoryRepository.findAll();

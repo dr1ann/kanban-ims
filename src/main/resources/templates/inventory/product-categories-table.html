@@ -19,7 +19,7 @@
         <tbody>
             <tr th:each="category : ${categories}" class="bg-white border-b hover:bg-gray-50">
                 <td th:text="${category.id}" class="px-6 py-4"></td>
-                <th th:text="${category.name}" scope="row" class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"></th>
+                <th th:text="${category.name}" scope="row" class="px-6 py-4 font-medium text-gray-700"></th>
                 <td th:if="${category.description != ''}" class="px-6 py-4">
                     <div class="categoryDescription truncate-description">
                         <span class="shortDesc break-words" th:text="${#strings.length(category.description) > 100 ? #strings.substring(category.description, 0, 100) + '...' : category.description}"></span>

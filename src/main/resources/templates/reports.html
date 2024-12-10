@@ -6,6 +6,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">    
     <link rel="stylesheet" th:href="@{css/output.tailwind.css}">
+    <link rel="stylesheet" th:href="@{/css/data-tables.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{css/other-styles.css}">
 </head>
@@ -14,8 +15,52 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
         <div th:replace="fragments/sidebar :: sidebar"></div>
         <div id="container" class="p-4 lg:ml-64">
             <div class="p-2">
-    
+                <div class="flex py-3 mt-6 lg:mt-10 overflow-x-auto whitespace-nowrap font-montserrat" aria-label="Breadcrumb">
+                    <ol class="inline-flex items-center rtl:space-x-reverse">
+                        <li class="inline-flex items-center">
+                            <img class="mr-1" th:src="@{/images/reports-icon-highlight.png}" alt="Reports Icon">
+                            <span class="text-sm font-medium text-[#1366D9]">Reports</span>
+                        </li>
+                    </ol>
+                </div>
+                <div class="bg-white drop-shadow-sm rounded-md p-4">
+                    <h1 class="text-gray-700 font-medium text-lg mb-6 mt-1 mx-[.4rem]">Overview</h1>
+                    <ol class="flex flex-row flex-wrap gap-4 items-center justify-evenly">
+                        <li class="flex flex-col items-start gap-1 justify-center p-2">
+                            <i class="fas fa-box text-blue-500 text-xl"></i>
+                            <span class="font-medium mt-[2px]" th:text="${totalNumberOfProducts}"></span>
+                            <span>Total No. of Products</span>
+                        </li>
+                        <li class="flex flex-col items-start gap-1 justify-center p-2">
+                            <i class="fas fa-exclamation-triangle text-orange-500 text-xl"></i>
+                            <span class="font-medium mt-[2px]" th:text="${totalNumberOfLowStockProducts}"></span>
+                            <span>Low Stock Products</span>
+                        </li>
+                        <li class="flex flex-col items-start gap-1 justify-center p-2">
+                            <i class="fas fa-ban text-red-500 text-xl"></i>
+                            <span class="font-medium mt-[2px]" th:text="${totalNumberOfNoStockProducts}"></span>
+                            <span>Out of Stock Products</span>
+                        </li>
+                        <li class="flex flex-col items-start gap-1 justify-center p-2">
+                            <i class="fas fa-chart-line text-green-500 text-xl"></i>
+                            <span class="font-medium mt-[2px]" th:text="'₱' + ${totalInventoryValue}"></span>
+                            <span>Projected Sales Revenue</span>
+                        </li>
+                    </ol>
+                </div>
+                <div class="bg-white drop-shadow-sm rounded-md p-4 mt-3">
+                    <h1 class="text-gray-700 font-medium text-xl mb-6 mt-1 mx-[.4rem]">Top Selling Stocks</h1>
+                    <div th:replace="fragments/top-selling-products-table :: top-selling-products-table"></div>
+                </div>
             </div>
         </div> 
+        <div th:replace="fragments/chatbot-faq :: chatbot-faq"></div> 
     </body>
+    <script th:src="@{/js/chatbot-faq.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script>
+        $('.data-table').DataTable();
+    </script>
 </html>

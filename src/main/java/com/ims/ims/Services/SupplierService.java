@@ -23,6 +23,15 @@ public class SupplierService {
         return supplierRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Supplier with ID " + id + " not found"));
     }
+
+    public boolean doesSupplierExist(String supplierName) {
+        return supplierRepository.existsByNameIgnoreCase(supplierName);
+    }
+
+    public boolean doesSupplierExistNotSelf(String supplierName, Long excludeId) {
+        return supplierRepository.existsByNameIgnoreCaseAndIdNot(supplierName, excludeId);
+    }
+
     public List<Supplier> findByProductsProvidedContains(String productName) {
         return supplierRepository.findByProductsProvidedContains(productName);
     }

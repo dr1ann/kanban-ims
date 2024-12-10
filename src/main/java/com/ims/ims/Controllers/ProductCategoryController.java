@@ -25,7 +25,7 @@ public class ProductCategoryController {
 
     @GetMapping("/inventory/categories")
     public String viewAllCategories(Model model) {
-        List<ProductCategory> productCategories = productCategoryService.getAllProductCategories();
+       List<ProductCategory> productCategories = productCategoryService.getAllProductCategories();
        Map<Long, Boolean> categoryProductStatus = new HashMap<>();
 
         for (ProductCategory category : productCategories) {
@@ -46,9 +46,14 @@ public class ProductCategoryController {
     }
 
     @PostMapping("/inventory/add-product-category")
-    public String addInventoryItem(@ModelAttribute ProductCategory productCategory, RedirectAttributes redirectAttributes) {
-        productCategoryService.addProductCategory(productCategory);
-        redirectAttributes.addFlashAttribute("message", "Product Category added sucessfully!");
+    public String addInventoryItem(@ModelAttribute ProductCategory productCategory,  @RequestParam("name") String name, RedirectAttributes redirectAttributes) {
+        if (productCategoryService.doesProductCategoryExist(name)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error adding the product category: Product Category already exists.");
+        } else {
+            productCategoryService.addProductCategory(productCategory);
+            redirectAttributes.addFlashAttribute("message", "Product Category added sucessfully!");
+        }
+
         return "redirect:/inventory/categories";
     }
 
@@ -66,10 +71,14 @@ public class ProductCategoryController {
     }
 
     @PostMapping("/inventory/edit-product-category/{id}")
-    public String editProductCategory(@PathVariable("id") Long id, @ModelAttribute ProductCategory productCategory, RedirectAttributes redirectAttributes) {
+    public String editProductCategory(@PathVariable("id") Long id, @ModelAttribute ProductCategory productCategory,  @RequestParam("name") String name, RedirectAttributes redirectAttributes) {
         try {
-            productCategoryService.updateProductCategory(id, productCategory);
-            redirectAttributes.addFlashAttribute("message", "Product Category updated successfully!");
+            if (productCategoryService.doesProductCategoryExistNotSelf(name, id)) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Error editing the product category: Product Category already exists.");
+            } else {
+                productCategoryService.updateProductCategory(id, productCategory);
+                redirectAttributes.addFlashAttribute("message", "Product Category updated successfully!");
+            }
             return "redirect:/inventory/categories";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());

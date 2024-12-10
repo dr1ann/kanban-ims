@@ -10,4 +10,6 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     @SuppressWarnings("null")
     Optional<Supplier> findById(Long id);
     List<Supplier> findByProductsProvidedContains(String productName);
+    boolean existsByNameIgnoreCase(String supplierName);
+    boolean existsByNameIgnoreCaseAndIdNot(String supplierName, Long excludeId);
 }

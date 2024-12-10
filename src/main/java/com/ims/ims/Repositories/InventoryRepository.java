@@ -10,5 +10,6 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     @SuppressWarnings("null")
     Optional<Inventory> findById(Long id);
     boolean existsByNameIgnoreCase(String productName);
+    boolean existsByNameIgnoreCaseAndIdNot(String productName, Long excludeId);
     boolean existsByCategory(ProductCategory category);
 }

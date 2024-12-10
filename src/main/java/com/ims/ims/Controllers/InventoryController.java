@@ -96,10 +96,14 @@ public class InventoryController {
     }
 
     @PostMapping("/inventory/edit-product/{id}")
-    public String editInventoryItem(@PathVariable("id") Long id, @ModelAttribute Inventory inventory, @RequestParam(value = "category", required = false) Long categoryId, RedirectAttributes redirectAttributes) {
+    public String editInventoryItem(@PathVariable("id") Long id, @ModelAttribute Inventory inventory, @RequestParam(value = "category", required = false) Long categoryId, @RequestParam("name") String name, RedirectAttributes redirectAttributes) {
         try {
-            inventoryService.updateInventoryItem(id, inventory, categoryId);
-            redirectAttributes.addFlashAttribute("message", "Product updated successfully!");
+            if(inventoryService.doesProductExistNotSelf(name, id)) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Error editing the product: Product already exists.");
+            } else {
+                inventoryService.updateInventoryItem(id, inventory, categoryId);
+                redirectAttributes.addFlashAttribute("message", "Product updated successfully!");
+            }
             return "redirect:/inventory/products";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
