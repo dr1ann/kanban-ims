@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ims.ims.Entities.Inventory;
 import com.ims.ims.Entities.Supplier;
@@ -31,6 +32,14 @@ public class SuppliersController {
         model.addAttribute("suppliers", suppliers);
         model.addAttribute("currentPage", "/suppliers");
         return "suppliers/suppliers-list";
+    }
+
+    @GetMapping("/suppliers/data")
+    @ResponseBody
+    public List<Supplier> exportSuppliers(Model model) {
+        List<Supplier> suppliers = supplierService.getAllSuppliers();
+       
+        return suppliers;
     }
 
     @GetMapping("/suppliers/add")

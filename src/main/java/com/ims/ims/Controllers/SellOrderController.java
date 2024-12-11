@@ -1,5 +1,6 @@
 package com.ims.ims.Controllers;
 
+import com.ims.ims.Entities.BuyOrder;
 import com.ims.ims.Entities.Inventory;
 import com.ims.ims.Entities.SellOrder;
 import com.ims.ims.Services.InventoryService;
@@ -30,6 +31,13 @@ public class SellOrderController {
         model.addAttribute("orders", sellOrders);
         model.addAttribute("currentPage", "/sell-order");
         return "sell-order/sell-order-list";
+    }
+
+    @GetMapping("/sell-order/data")
+    @ResponseBody
+    public List<SellOrder> exportSellOrders(Model model) {
+        List<SellOrder> sellOrders = sellOrderService.getAllSellOrders();
+        return sellOrders;
     }
     
     @GetMapping("/sell-order/add")

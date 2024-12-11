@@ -3,6 +3,9 @@
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 shadow drop-shadow-sm">
             <tr>
                 <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Supplier ID
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
                     Supplier Name
                 </th>
                 <th scope="col" class="px-6 py-3 whitespace-nowrap">
@@ -24,6 +27,7 @@
         </thead>
         <tbody>
             <tr th:each="supplier : ${suppliers}" class="bg-white border-b hover:bg-gray-50">
+                <td th:text="${supplier.id}" class="px-6 py-4"></td>
                 <th th:text="${supplier.name}" scope="row" class="px-6 py-4 font-medium text-gray-700"></th>
                 <td th:text="${supplier.contactNumber}" class="px-6 py-4"></td>
                 <td th:text="${supplier.contactPerson}" class="px-6 py-4"></td>

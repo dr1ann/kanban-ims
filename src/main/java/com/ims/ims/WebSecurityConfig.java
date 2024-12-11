@@ -22,7 +22,7 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/", "/login", "/css/output.tailwind.css", "/js/toggle-password.js", "/images/logo.png",
-                                "/images/smallogo.png").permitAll()
+                                "/images/smallogo.png", "/static/favicon.ico").permitAll()
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
 

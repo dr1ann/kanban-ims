@@ -39,6 +39,14 @@ public class ProductCategoryController {
         return "inventory/product-categories-list";
     }
 
+    @GetMapping("/inventory/categories/data")
+    @ResponseBody
+    public List<ProductCategory> exportCategories(Model model) {
+       List<ProductCategory> productCategories = productCategoryService.getAllProductCategories();
+       
+        return productCategories;
+    }
+
     @GetMapping("/inventory/add-product-category")
     public String showAddProductCategoryForm(Model model) {
         model.addAttribute("currentPage", "/add-cat");

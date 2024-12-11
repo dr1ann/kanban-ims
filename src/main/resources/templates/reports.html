@@ -7,6 +7,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">    
     <link rel="stylesheet" th:href="@{css/output.tailwind.css}">
     <link rel="stylesheet" th:href="@{/css/data-tables.css}">
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{css/other-styles.css}">
 </head>
@@ -49,7 +50,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                     </ol>
                 </div>
                 <div class="bg-white drop-shadow-sm rounded-md p-4 mt-3">
-                    <h1 class="text-gray-700 font-medium text-xl mb-6 mt-1 mx-[.4rem]">Top Selling Stocks</h1>
+                    <h1 class="text-gray-700 font-medium text-lg mb-6 mt-1 mx-[.4rem]">Top Selling Stocks</h1>
                     <div th:replace="fragments/top-selling-products-table :: top-selling-products-table"></div>
                 </div>
             </div>

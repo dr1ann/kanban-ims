@@ -2,10 +2,10 @@ package com.ims.ims.Entities;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
 import jakarta.persistence.Entity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 public class SellOrder extends Orders {
    private String customerName;

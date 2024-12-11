@@ -53,6 +53,7 @@ public class InventoryController {
     @ResponseBody
     public List<Inventory> getInventoryData() {
         List<Inventory> inventoryList = inventoryService.getAllInventoryItems();
+        System.out.println(inventoryList.size());
         return inventoryList;
     }
 

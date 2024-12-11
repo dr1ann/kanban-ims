@@ -39,6 +39,13 @@ public class BuyOrderController {
         return "buy-order/buy-order-list";
     }
 
+    @GetMapping("/buy-order/data")
+    @ResponseBody
+    public List<BuyOrder> exportBuyOrders(Model model) {
+        List<BuyOrder> buyOrders = buyOrderService.getAllBuyOrders();
+        return buyOrders;
+    }
+
     @PostMapping("/buy-order/edit-status/{id}")
     public String editBuyOrderStatus(@RequestParam("orderId") Long orderId, @RequestParam("formType") String formType, @RequestParam(value = "backOrderQuantity", required = false) Integer backOrderQuantity,  @RequestParam(value = "badOrderQuantity", required = false) Integer badOrderQuantity, RedirectAttributes redirectAttributes) {
         BuyOrder orderToUpdate = buyOrderService.getBuyOrderById(orderId);

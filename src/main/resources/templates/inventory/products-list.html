@@ -6,6 +6,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">    
     <link rel="stylesheet" th:href="@{/css/output.tailwind.css}">
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/data-tables.css}">
     <link rel="stylesheet" th:href="@{/css/other-styles.css}">
@@ -117,43 +118,51 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                 });
             });
         });
-    function closeAlert() {
-            const alert = document.getElementById("alert");
-            alert.style.transition = "opacity 0.5s ease, max-height 0.5s ease";
-            alert.style.opacity = "0";
-            alert.style.maxHeight = "0";
-            setTimeout(() => alert.style.display = "none", 500);
-        }
-    async function exportToExcel() {
-        const response = await fetch('/inventory/data');
-        const data = await response.json();
+        function closeAlert() {
+                const alert = document.getElementById("alert");
+                alert.style.transition = "opacity 0.5s ease, max-height 0.5s ease";
+                alert.style.opacity = "0";
+                alert.style.maxHeight = "0";
+                setTimeout(() => alert.style.display = "none", 500);
+            }
+        async function exportToExcel() {
+            const response = await fetch('/inventory/data');
+            const data = await response.json();
 
-        const rows = data.map(product => [
-            product.name,
-            product.price === 0.0 ? "N/A" : `₱${product.price}`,
-            product.quantity.toLocaleString() + " " + product.unit,
-            product.threshold.toLocaleString() + " " + product.unit,
-            product.exportExpiryDate,
-            product.stockStatus
-        ]);
-        console.log(rows)
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
 
-        rows.unshift(["NAME", "BUYING PRICE", "QUANTITY", "THRESHOLD VALUE", "EXPIRY DATE", "AVAILABILITY"]);
+            const rows = data.map(product => [
+                product.id.toString(),
+                product.name,
+                product.category?.name,
+                '₱' + product.formattedBuyingPrice,
+                '₱' + product.formattedSellingPrice,
+                product.formattedQuantity,
+                product.formattedThreshold,
+                product.stockStatus
+            ]);
 
-        const worksheet = XLSX.utils.aoa_to_sheet(rows);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Inventory");
-
-        const columnWidths = rows[0].map((header, i) => {
-            const maxLength = Math.max(
-                header.length,
-                ...rows.map(row => row[i].toString().length)
+            rows.unshift(
+                [`Inventory - Date: ${formattedDate}`],
+                ["PRODUCT ID", "NAME", "CATEGORY", "SUPPLIER PRICE", "SUPPLIER PRICE", "QUANTITY", "THRESHOLD VALUE", "AVAILABILITY"]
             );
-            return { wch: maxLength + 2 };
-        });
-        worksheet['!cols'] = columnWidths;
 
-        XLSX.writeFile(workbook, "Inventory_Data.xlsx");
-}
+            const worksheet = XLSX.utils.aoa_to_sheet(rows);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Inventory");
+
+            const columnWidths = rows[1].map((header, i) => { 
+                const maxLength = Math.max(
+                    header.length,
+                    ...rows.slice(2).map(row => row[i]?.toString().length || 0) 
+                );
+                return { wch: maxLength + 2 };
+            });
+            worksheet['!cols'] = columnWidths;
+
+            XLSX.writeFile(workbook, "Inventory_Data.xlsx");
+        }
+
     </script>
 </html>
