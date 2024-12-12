@@ -61,9 +61,14 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                 <div th:if="${!orders.empty}">
                     <div class="flex flex-wrap gap-4 items-center justify-between mb-6 mt-3 mx-[.4rem]">
                         <h1 class="text-gray-700 font-medium text-xl">Transactions</h1>
-                        <button onclick="exportToExcel()" class="hidden lg:block text-sm bg-[#1366D9] shadow px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9]">
-                            <i class="fa-solid fa-file-export"></i> Export
-                        </button>              
+                        <div class="flex gap-3">
+                            <a href="/sell-order/add" class="hidden lg:block text-sm bg-[#1366D9] shadow px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9]">
+                                <i class="fa-solid fa-plus"></i> Add Order
+                            </a>
+                            <button onclick="exportToExcel()" class="hidden lg:block text-sm bg-[#1366D9] shadow px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9]">
+                                <i class="fa-solid fa-file-export"></i> Export
+                            </button>
+                        </div>                 
                     </div>
                     <div th:replace="/sell-order/sell-order-table :: sell-order-table"></div>
                 </div>

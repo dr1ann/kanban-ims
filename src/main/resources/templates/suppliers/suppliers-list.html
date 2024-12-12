@@ -61,9 +61,15 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                 <div th:if="${!suppliers.empty}">
                     <div class="flex flex-wrap gap-4 items-center justify-between mb-6 mt-3 mx-[.4rem]">
                         <h1 class="text-gray-700 font-medium text-xl">Suppliers List</h1>
-                        <button onclick="exportToExcel()" class="hidden lg:block text-sm bg-[#1366D9] shadow px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9]">
-                            <i class="fa-solid fa-file-export"></i> Export
-                        </button>              
+                        <div class="flex gap-3">
+                            <a href="/suppliers/add" class="hidden lg:block text-sm bg-[#1366D9] shadow px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9]">
+                                <i class="fa-solid fa-plus"></i> Add Supplier
+                            </a>
+                            <button onclick="exportToExcel()" class="hidden lg:block text-sm bg-[#1366D9] shadow px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9]">
+                                <i class="fa-solid fa-file-export"></i> Export
+                            </button> 
+                        </div>
+                                     
                     </div>
                     <div th:replace="/suppliers/suppliers-list-table :: suppliers-list-table"></div>
                     <div th:replace="fragments/deletion-confirmation-supplier-modal :: deletion-confirmation-supplier-modal"></div>

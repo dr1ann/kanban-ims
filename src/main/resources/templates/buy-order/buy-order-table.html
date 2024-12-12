@@ -67,13 +67,15 @@
                     <span th:if="${order.status == 'Received'}">N/A</span>           
                 </td>
                 <td class="px-6 py-4">
-                    <a th:if="${order.status == 'Pending'}" th:href="@{/buy-order/edit-order/{id}(id=${order.id})}" class="shadow text-sm bg-[#1366D9] px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9]">
-                        <i class="fa-regular fa-pen-to-square"></i>
-                    </a> 
-                    <span th:if="${order.status != 'Pending'}">N/A</span> 
-                    <!-- <button th:id="'deleteBuyOrderButton' + ${order.id}" type="button" data-th-attr="data-modal-target='deleteBuyOrderModal' + ${order.id}, data-modal-toggle='deleteBuyOrderModal' + ${order.id}" class="shadow text-sm bg-red-500 px-3 py-1 text-white rounded-lg border border-red-500 transition-colors duration-300 hover:bg-transparent hover:text-red-600">
-                        <i class="fa-regular fa-trash-can"></i>
-                    </button> -->
+                    <div class="flex flex-row items-center justify-center gap-3 h-full">
+                        <a th:if="${order.status == 'Pending'}" th:href="@{/buy-order/edit-order/{id}(id=${order.id})}" class="shadow text-sm bg-[#1366D9] px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9]">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </a> 
+                        <span th:if="${order.status != 'Pending'}">N/A</span> 
+                        <button th:if="${order.status == 'Pending'}" th:id="'deleteBuyOrderButton' + ${order.id}" type="button" data-th-attr="data-modal-target='deleteBuyOrderModal' + ${order.id}, data-modal-toggle='deleteBuyOrderModal' + ${order.id}" class="shadow text-sm bg-red-500 px-3 py-1 text-white rounded-lg border border-red-500 transition-colors duration-300 hover:bg-transparent hover:text-red-600">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                    </div>
                 </td> 
                 <div th:replace="fragments/receive-confirmation-modal ::  receive-confirmation-modal(order=${order})"></div>
                 <div th:replace="fragments/back-order-confirmation-modal ::  back-order-confirmation-modal(order=${order})"></div>
