@@ -19,7 +19,8 @@ public class BuyOrder extends Orders {
     private Integer backOrderQuantity;
     private Integer badOrderQuantity;
     private LocalDateTime receiveDate;
-
+    private String cancelOrderReason;
+    
     public BuyOrder() {
         this.backOrderQuantity = 0;
         this.badOrderQuantity = 0;
@@ -39,6 +40,14 @@ public class BuyOrder extends Orders {
 
     public void setBadOrderQuantity(Integer badOrderQuantity) {
         this.badOrderQuantity = badOrderQuantity;
+    }
+
+    public String getCancelOrderReason() {
+        return cancelOrderReason;
+    }
+
+    public void setCancelOrderReason(String cancelOrderReason) {
+        this.cancelOrderReason = cancelOrderReason;
     }
 
     public LocalDateTime getReceiveDate() {

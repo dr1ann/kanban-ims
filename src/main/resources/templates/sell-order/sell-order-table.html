@@ -3,7 +3,7 @@
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 shadow drop-shadow-sm">
             <tr>
                 <th scope="col" class="px-6 py-3 whitespace-nowrap">
-                    Order ID
+                    S-O ID
                 </th>
                 <th scope="col" class="px-6 py-3 whitespace-nowrap">
                     Product Name
@@ -15,20 +15,20 @@
                     Order Amount
                 </th>
                 <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Amount Paid
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Change
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
                     Order Date
                 </th>
-                <th scope="col" class="px-6 py-3 whitespace-nowrap">
-                    Customer Name
-                </th>
-                <th scope="col" class="px-6 py-3 whitespace-nowrap">
-                    Customer Contact
-                </th>
-                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                <!-- <th scope="col" class="px-6 py-3 whitespace-nowrap">
                     Status
                 </th>
                 <th scope="col" class="px-6 py-3">
                     Action
-                </th>
+                </th> -->
             </tr>
         </thead>
         <tbody>
@@ -37,29 +37,20 @@
                 <th th:text="${order.getProduct().name}" scope="row" class="px-6 py-4 font-medium text-gray-700"></th>
                 <td th:text="${order.formattedQuantity}" class="px-6 py-4"></td>
                 <td th:text="${'₱' + order.formattedTotalAmount}" class="px-6 py-4"></td>
+                <td th:text="${'₱' + order.formattedAmountPayed}" class="px-6 py-4"></td>
+                <td th:text="${'₱' + order.formattedChange}" class="px-6 py-4"></td>
                 <td th:text="${order.formattedOrderDate}" class="px-6 py-4"></td>
-                <td th:text="${order.customerName}" class="px-6 py-4"></td>
-                <td th:text="${order.customerContact}" class="px-6 py-4"></td>
-                <th class="font-medium px-6 py-4">
-                    <div class="flex items-center gap-2">
-                        <span th:if="${order.confirmDate != null}" th:title="'On ' + ${order.formattedConfirmDate}" th:classappend="${order.status == 'Pending' ? '!text-[#E7C833]' : '!text-[#10A760]'}" th:text="${order.status}"></span>
-                        <span th:if="${order.confirmDate == null}" th:classappend="${order.status == 'Pending' ? '!text-[#E7C833]' : '!text-[#10A760]'}" th:text="${order.status}"></span>
-                        <button th:if="${order.status == 'Pending'}" th:onclick="|showConfirmOrderModal('confirmOrderModal' + ${order.id})|" title="Confirm Order" class="shadow text-xs bg-green-500 px-2 py-1 text-white rounded-lg border border-green-500 transition-colors duration-300 hover:bg-transparent hover:text-green-500">
-                            <i class="fa-solid fa-check"></i>
-                        </button>
-                    </div>
-                    
-                </th>
+                <!-- <th class="text-[#10A760] font-medium px-6 py-4" th:text="${order.status}"></th>
                 <td class="px-6 py-4">
                     <a th:if="${order.status == 'Pending'}" th:href="@{/sell-order/edit-order/{id}(id=${order.id})}" class="shadow text-sm bg-[#1366D9] px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9]">
                         <i class="fa-regular fa-pen-to-square"></i>
                     </a> 
                     <span th:if="${order.status != 'Pending'}">N/A</span>
-                    <!-- <button th:id="'deleteBuyOrderButton' + ${order.id}" type="button" data-th-attr="data-modal-target='deleteBuyOrderModal' + ${order.id}, data-modal-toggle='deleteBuyOrderModal' + ${order.id}" class="shadow text-sm bg-red-500 px-3 py-1 text-white rounded-lg border border-red-500 transition-colors duration-300 hover:bg-transparent hover:text-red-600">
+                    <button th:id="'deleteBuyOrderButton' + ${order.id}" type="button" data-th-attr="data-modal-target='deleteBuyOrderModal' + ${order.id}, data-modal-toggle='deleteBuyOrderModal' + ${order.id}" class="shadow text-sm bg-red-500 px-3 py-1 text-white rounded-lg border border-red-500 transition-colors duration-300 hover:bg-transparent hover:text-red-600">
                         <i class="fa-regular fa-trash-can"></i>
-                    </button> -->
+                    </button>
                 </td>
-                <div th:replace="fragments/confirm-sell-confirmation-modal ::  confirm-sell-modal(order=${order})"></div>
+                <div th:replace="fragments/confirm-sell-confirmation-modal ::  confirm-sell-modal(order=${order})"></div> -->
             </tr>
         </tbody>
     </table>

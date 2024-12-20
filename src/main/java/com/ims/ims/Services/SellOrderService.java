@@ -34,9 +34,6 @@ public class SellOrderService {
         existingSellOrder.setQuantity(updateSellOrder.getQuantity());
         updateSellOrder.calculateTotalAmount();
         existingSellOrder.setTotalAmount(updateSellOrder.getTotalAmount());
-        existingSellOrder.setCustomerName(updateSellOrder.getCustomerName());
-        existingSellOrder.setCustomerContact(updateSellOrder.getCustomerContact());
-        existingSellOrder.setConfirmDate(updateSellOrder.getConfirmDate());
         return sellOrderRepository.save(existingSellOrder);
     }   
 

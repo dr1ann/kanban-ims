@@ -1,6 +1,5 @@
 package com.ims.ims.Services;
 
-
 import com.ims.ims.Entities.BuyOrder;
 import com.ims.ims.Repositories.BuyOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,18 +47,15 @@ public class BuyOrderService {
         return buyOrderRepository.save(existingBuyOrder);
     }   
 
-    // @Transactional
-    // public void deleteProductCategory(Long id) {
-    //     ProductCategory productCategory = getProductCategoryById(id);
-    //     List<Inventory> products = inventoryRepository.findAll();
+    public void cancelBuyOrderTransaction(Long id, String cancelOrderReason) {
+        BuyOrder buyOrder = getBuyOrderById(id);
+        buyOrder.setStatus("Cancelled");
+        buyOrder.setCancelOrderReason(cancelOrderReason);
+        buyOrderRepository.save(buyOrder);
+    }
 
-    //     for (Inventory product : products) {
-    //         if (product.getCategory() != null && productCategory.getId().equals(product.getCategory().getId())) {
-    //             product.setCategory(null);
-    //             inventoryRepository.save(product);
-    //         }
-    //     }
-
-    //     productCategoryRepository.delete(productCategory);
-    // }   
+    public void deleteBuyOrderTransaction(Long id) {
+        BuyOrder buyOrder = getBuyOrderById(id);
+        buyOrderRepository.delete(buyOrder);
+    } 
 }

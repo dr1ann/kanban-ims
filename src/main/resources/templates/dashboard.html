@@ -24,65 +24,66 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                         </li>
                     </ol>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                    <div class="bg-white  drop-shadow-sm rounded-md p-4">
-                        <h1 class="text-gray-700 font-medium text-base mb-6 mt-1 mx-[.4rem]">Inventory Summary</h1>
-                        <div class="flex flex-row items-center justify-evenly  gap-6 text-center text-sm">
-                            <div class="flex flex-col items-center justify-center">
-                                <img th:src="@{/images/quantity-in-hand.png}" class="w-[1.5rem] h-[1.5rem] mb-3" alt="Quantity icon">
-                                <span class="font-medium" th:text="${totalQuantity}"></span>
-                                <span>Quantity in hand</span>
-                            </div>
-                            <div class="flex flex-col items-center justify-center">
-                                <img th:src="@{/images/on-the-way.png}" class="w-[1.5rem] h-[1.5rem] mb-3" alt="Quantity icon">
-                                <span class="font-medium" th:text="${quantitiesToBeRecieved}"></span>
-                                <span>To be received</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white drop-shadow-sm rounded-md p-4">
+                <div class="flex flex-col gap-4 mt-4">
+                    <div class="bg-white w-full sm:w-fit mx-auto drop-shadow-sm rounded-md p-4">
                         <div class="flex justify-between gap-6">
                             <h1 class="text-gray-700 font-medium text-base mb-6 mt-1 mx-[.4rem]">Low Quantity Stock</h1>
-                            <a href="/inventory/products" class="hover:underline text-sm font-medium text-[#1366D9]">View All</a>
+                            <a th:if="${!lowQuantityProducts.isEmpty}" href="/inventory/products" class="hover:underline text-sm font-medium text-[#1366D9]">View All</a>
                         </div>
                         
-                        <ul th:if="${!lowQuantityProducts.isEmpty}" th:each="product : ${lowQuantityProducts}" class="grid grid-cols-2 place-items-center gap-3">
-                            <li class="flex-col gap-1">
-                                <h1 class="text-gray-700 font-medium" th:text="${product.name}"></h1>
-                                <span class="text-[#667085] text-sm" th:text=" 'Remaining Quantity: ' + ${product.quantity}"></span>
-                                <a th:href="@{/buy-order/reorder(productId=${product.id})}" class="shadow px-2 py-1 rounded-lg border border-[#D0D5DD] text-[#5D6679]  hover:text-[#1366D9]">
+                        <ul th:if="${!lowQuantityProducts.isEmpty}" class="grid grid-cols-1 sm:grid-cols-3 ml-2 gap-6 sm:gap-14">
+                            <li th:each="product : ${lowQuantityProducts}" class="flex flex-row gap-2 items-center">
+                                <div class="flex-col gap-1">
+                                    <h1 class="text-gray-700 font-medium" th:text="${product.name}"></h1>
+                                    <span class="text-[#667085] text-xs" th:text=" 'Remaining Quantity: ' + ${product.quantity}"></span>
+                                </div>
+                                <a th:href="@{/buy-order/reorder(productId=${product.id})}" class="h-fit shadow px-2 py-1 rounded-lg border border-[#D0D5DD] text-[#5D6679]  hover:text-[#1366D9]">
                                     <i class="fa-solid fa-rotate-left hover:underline"></i>
                                 </a>
                             </li>
                         </ul>
-                        <h2 th:if="${lowQuantityProducts.isEmpty}" class="text-sm text-[#667085] text-center font-medium mt-4">All stock levels are sufficient.<br> No low-stock products at the moment.</h2>
+                        <div th:if="${lowQuantityProducts.isEmpty}" class="flex flex-row items-center justify-center gap-2">
+                            <i class="text-xl fas fa-check-circle text-green-500"></i>
+                            <h2 class="text-sm text-[#667085] text-center font-medium my-4">All stock levels are sufficient. No low-stock products at the moment.</h2>
+                            
+                        </div>
+                      
                     </div>
-                    <div class="bg-white  drop-shadow-sm rounded-md p-4">
-                        <h1 class="text-gray-700 font-medium text-base mb-6 mt-1 mx-[.4rem]">Purchase Overview</h1>
-                        <div class="flex flex-row items-center justify-evenly  gap-6 text-center text-sm">
-                            <div class="flex flex-col items-center justify-center">
-                                <img th:src="@{/images/purchase.png}" class="w-[1.5rem] h-[1.5rem] mb-3" alt="Quantity icon">
-                                <span class="font-medium" th:text="${purchaseCount}"></span>
-                                <span>Purchases</span>
-                            </div>
-                            <div class="flex flex-col items-center justify-center">
-                                <img th:src="@{/images/cost.png}" class="w-[1.5rem] h-[1.5rem] mb-3" alt="Quantity icon">
-                                <span class="font-medium" th:text=" '₱' + ${totalPurchaseCost}"></span>
-                                <span>Total Cost</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-white grid drop-shadow-sm rounded-md p-4">
+                            <h1 class="text-gray-700 font-medium text-base mb-6 mt-1 mx-[.4rem]">Purchase Overview</h1>
+                            <div class="flex flex-row items-center justify-evenly  gap-6 text-center text-sm">
+                                <div class="flex flex-col items-center justify-center">
+                                    <img th:src="@{/images/purchase.png}" class="w-[1.5rem] h-[1.5rem] mb-3" alt="Quantity icon">
+                                    <span class="font-medium" th:text="${purchaseCount}"></span>
+                                    <span>Purchases</span>
+                                </div>
+                                <div class="flex flex-col items-center justify-center">
+                                    <img th:src="@{/images/cost.png}" class="w-[1.5rem] h-[1.5rem] mb-3" alt="Quantity icon">
+                                    <span class="font-medium" th:text=" '₱' + ${totalPurchaseCost}"></span>
+                                    <span>Total Cost</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="bg-white  drop-shadow-sm rounded-md p-4">
-                        <h1 class="text-gray-700 font-medium text-base mb-6 mt-1 mx-[.4rem]">Supplier Summary</h1>
-                        <div class="flex flex-col items-center justify-center text-center text-sm">
-                            <img th:src="@{/images/supplier-sum.png}" class="w-[1.5rem] h-[1.5rem] mb-3" alt="Quantity icon">
-                            <span class="font-medium" th:text="${totalSuppliers}"></span>
-                            <span>No. of Suppliers</span>
+                        <div class="bg-white  drop-shadow-sm rounded-md p-4">
+                            <h1 class="text-gray-700 font-medium text-base mb-6 mt-1 mx-[.4rem]">Supplier Summary</h1>
+                            <div class="flex flex-col items-center justify-center text-center text-sm">
+                                <img th:src="@{/images/supplier-sum.png}" class="w-[1.5rem] h-[1.5rem] mb-3" alt="Quantity icon">
+                                <span class="font-medium" th:text="${totalSuppliers}"></span>
+                                <span>No. of Suppliers</span>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 gap-4 mt-4">
+                    <div class="bg-white drop-shadow-sm rounded-md p-4">
+                        <h1 class="text-gray-700 font-medium text-lg mb-6 mt-1 mx-[.4rem]">Quantity in hand</h1>
+                        <div th:replace="fragments/product-quantities-table ::product-quantities-table"></div>
+                    </div>
+                    <div class="bg-white drop-shadow-sm rounded-md p-4">
+                        <h1 class="text-gray-700 font-medium text-lg mb-6 mt-1 mx-[.4rem]">To be Received</h1>
+                        <div th:replace="fragments/to-be-received-orders-table :: to-be-received-orders-table"></div>
+                    </div>
                     <div class="bg-white drop-shadow-sm rounded-md p-4">
                         <h1 class="text-gray-700 font-medium text-lg mb-6 mt-1 mx-[.4rem]">Pending Purchase Orders</h1>
                         <div th:replace="fragments/pending-orders-table :: pending-orders-table"></div>

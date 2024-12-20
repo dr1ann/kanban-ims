@@ -1,53 +1,60 @@
 package com.ims.ims.Entities;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import jakarta.persistence.Entity;
+
+import java.text.DecimalFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 public class SellOrder extends Orders {
-   private String customerName;
-   private String customerContact;
-   private LocalDateTime confirmDate;
+    private Double amountPayed;
+    private Double change;
 
-   @Override
+    @Override
     public void calculateTotalAmount() {
         Double price = getProduct().getSellingPrice();
         setTotalAmount(getQuantity() * price);
+        calculateChange(); // Recalculate change when total amount is updated
     }
 
-   public String getCustomerName() {
-        return customerName;
-   }
-
-   public void setCustomerName(String customerName) {
-    this.customerName = customerName;
+    public Double getAmountPayed() {
+        return amountPayed;
     }
 
-    public String getCustomerContact() {
-        return customerContact;
-   }
-
-   public void setCustomerContact(String customerContact) {
-    this.customerContact = customerContact;
+    public void setAmountPayed(Double amountPayed) {
+        this.amountPayed = amountPayed;
+        calculateChange(); // Recalculate change when amountPayed is updated
     }
 
-    public LocalDateTime getConfirmDate() {
-        return confirmDate;
+    public Double getChange() {
+        return change;
     }
 
-    public void setConfirmDate(LocalDateTime confirmDate) {
-        this.confirmDate = confirmDate;
-    }
-
-    //formated getter(s)
-    public String getFormattedConfirmDate() {
-        if (confirmDate == null) {
-            return ""; 
+    private void calculateChange() {
+        if (amountPayed != null && getTotalAmount() != null) {
+            this.change = amountPayed - getTotalAmount();
+            if (this.change < 0) {
+                this.change = 0.0; // Ensure change is not negative
+            }
+        } else {
+            this.change = 0.0;
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy 'at' h:mm a");
-        return confirmDate.format(formatter); // Formats the LocalDateTime to a String
+    }
+
+    public void setChange(Double change) {
+        this.change = change;
+    }
+
+    // Formatted getters
+    public String getFormattedAmountPayed() {
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+        return decimalFormat.format(amountPayed);
+    }
+
+    public String getFormattedChange() {
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+        return decimalFormat.format(change);
     }
 }

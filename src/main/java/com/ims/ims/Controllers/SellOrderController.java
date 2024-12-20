@@ -1,6 +1,5 @@
 package com.ims.ims.Controllers;
 
-import com.ims.ims.Entities.BuyOrder;
 import com.ims.ims.Entities.Inventory;
 import com.ims.ims.Entities.SellOrder;
 import com.ims.ims.Services.InventoryService;
@@ -10,8 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -57,38 +54,44 @@ public class SellOrderController {
     @PostMapping("/sell-order/add")
     public String addSellOrder(@ModelAttribute SellOrder sellOrder, @RequestParam("quantity") Integer inputQuantity, RedirectAttributes redirectAttributes) {
         Inventory currentProductToUpdate = sellOrder.getProduct();
-    
+        Integer orderQuantity = sellOrder.getQuantity();
+        Integer currentProductQuantity = sellOrder.getProduct().getQuantity();
         if (currentProductToUpdate.getQuantity() < inputQuantity) {
             redirectAttributes.addFlashAttribute("errorMessage", 
                 "Order cancelled: The requested quantity (" + inputQuantity + ") exceeds the available stock (" + currentProductToUpdate.getQuantity() + ").");
             return "redirect:/sell-order/list";
         }
+
+        Integer updatedQuantity = currentProductQuantity - orderQuantity;  
+        currentProductToUpdate.setQuantity(updatedQuantity);
+        inventoryService.updateInventoryQuantity(currentProductToUpdate.getId(), currentProductToUpdate); 
+        sellOrder.setStatus("Confirmed");
     
         sellOrderService.addNewSellOrder(sellOrder);
-        redirectAttributes.addFlashAttribute("message", "Order placed successfully!");
+        redirectAttributes.addFlashAttribute("message", "Order confirmed successfully!");
         return "redirect:/sell-order/list";
     }
     
 
-    @PostMapping("/sell-order/edit-status/{id}")
-    public String editSellOrderStatus(@RequestParam("orderId") Long orderId, @RequestParam("formType") String formType, RedirectAttributes redirectAttributes) {
-        SellOrder orderToUpdate = sellOrderService.getSellOrderById(orderId);
-        Integer orderQuantity = orderToUpdate.getQuantity();
-        Inventory currentProductToUpdate = orderToUpdate.getProduct();
-        Integer currentProductQuantity = orderToUpdate.getProduct().getQuantity();
-        if ("confirmOrder".equals(formType)) {
-            Integer updatedQuantity = currentProductQuantity - orderQuantity;  
-            currentProductToUpdate.setQuantity(updatedQuantity);
-            inventoryService.updateInventoryQuantity(currentProductToUpdate.getId(), currentProductToUpdate); 
+    // @PostMapping("/sell-order/edit-status/{id}")
+    // public String editSellOrderStatus(@RequestParam("orderId") Long orderId, @RequestParam("formType") String formType, RedirectAttributes redirectAttributes) {
+    //     SellOrder orderToUpdate = sellOrderService.getSellOrderById(orderId);
+    //     Integer orderQuantity = orderToUpdate.getQuantity();
+    //     Inventory currentProductToUpdate = orderToUpdate.getProduct();
+    //     Integer currentProductQuantity = orderToUpdate.getProduct().getQuantity();
+    //     if ("confirmOrder".equals(formType)) {
+    //         Integer updatedQuantity = currentProductQuantity - orderQuantity;  
+    //         currentProductToUpdate.setQuantity(updatedQuantity);
+    //         inventoryService.updateInventoryQuantity(currentProductToUpdate.getId(), currentProductToUpdate); 
             
-            orderToUpdate.setStatus("Confirmed");
-            orderToUpdate.setConfirmDate(LocalDateTime.now());
-            sellOrderService.updateSellOrder(orderId, orderToUpdate);
-            redirectAttributes.addFlashAttribute("message", "Order ID " + orderId + " confirmed successfully! Product quantity updated."); 
-        }
+    //         orderToUpdate.setStatus("Confirmed");
+    //         orderToUpdate.setConfirmDate(LocalDateTime.now());
+    //         sellOrderService.updateSellOrder(orderId, orderToUpdate);
+    //         redirectAttributes.addFlashAttribute("message", "Order ID " + orderId + " confirmed successfully! Product quantity updated."); 
+    //     }
         
-        return "redirect:/inventory/products";
-    }
+    //     return "redirect:/inventory/products";
+    // }
     @GetMapping("/sell-order/edit-order/{id}")
     public String showEditSellOrderForm(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
         try {

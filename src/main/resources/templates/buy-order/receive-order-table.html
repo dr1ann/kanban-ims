@@ -1,0 +1,57 @@
+<div th:fragment="receive-order-table">
+    <table class="data-table w-full text-sm text-left rtl:text-right text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 shadow drop-shadow-sm">
+            <tr>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    P-O ID
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Product Name
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Quantity
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Status
+                </th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">
+                    Receive
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:if="${order.status != 'Cancelled'}" th:each="order : ${orders}" class="bg-white border-b hover:bg-gray-50">
+                <td th:text="${order.id}" class="px-6 py-4"></td>
+                <th th:text="${order.getProduct().name}" scope="row" class="px-6 py-4 font-medium text-gray-700"></th>
+                <td th:text="${order.formattedQuantity}" class="px-6 py-4"></td>
+                <th th:if="${order.status == 'Cancelled'}" th:title="'Reason: ' + ${order.cancelOrderReason}" th:text="${order.status}" class="text-[#DA3E33] font-medium px-6 py-4"></th>
+                <th th:if="${order.status != 'Cancelled'}"  th:classappend="${order.status == 'Received' ? '!text-[#10A760]' : order.status == 'Pending' ? '!text-[#E7C833]' : 'text-[#E19133]'}" th:text="${order.status}" class="font-medium px-6 py-4"></th>
+                <td class="px-6 py-4">
+                    <div class="flex flex-col gap-3 h-full">
+                        <div class="flex gap-3">
+                            <button th:if="${order.status != 'Received'}" th:onclick="|showReceiveOrderModal('receiveOrderModal' + ${order.id})|" 
+                                title="Receive Order" 
+                                class="shadow text-xs bg-green-500 px-3 py-1 text-white rounded-lg border border-green-500 transition-colors duration-300 hover:bg-transparent hover:text-green-500">
+                                <i class="fa-solid fa-check-to-slot"></i>
+                            </button>
+                            <!-- <div class="flex gap-3" th:if="${order.backOrderQuantity == 0 && order.badOrderQuantity == 0 && order.status != 'Received'}">
+                                <button th:if="${order.backOrderQuantity == 0}" th:onclick="|showBackOrderModal('backOrderModal' + ${order.id})|"
+                                    title="Back Order" 
+                                    class="shadow text-xs bg-yellow-500 px-3 py-1 text-white rounded-lg border border-yellow-500 transition-colors duration-300 hover:bg-transparent hover:text-yellow-500">
+                                    <i class="fa-solid fa-rotate"></i>
+                                </button>
+                                <button th:if="${order.badOrderQuantity == 0}" th:onclick="|showBadOrderModal('badOrderModal' + ${order.id})|" 
+                                title="Bad Order" 
+                                class="shadow text-xs bg-red-500 px-3 py-1 text-white rounded-lg border border-red-500 transition-colors duration-300 hover:bg-transparent hover:text-red-500">
+                                <i class="fa-solid fa-times-circle"></i>
+                                </button>
+                            </div> -->
+                        </div>
+                    </div>
+                    <span th:if="${order.status == 'Received'}">N/A</span>           
+                </td>
+                <div th:replace="fragments/receive-confirmation-modal ::  receive-confirmation-modal(order=${order})"></div>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -99,7 +99,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                                     <tbody>
                                         <tr th:each="product : ${products}" class="bg-white border-b hover:bg-gray-50">
                                             <td class="px-6 py-4">
-                                                <input required type="radio" name="product" id="product-${product.id}" class="!rounded-lg" data-th-attr="data-product-price=${product.buyingPrice}"  th:value="${product.id}">
+                                                <input required type="radio" name="product" id="product-${product.id}" class="!rounded-lg" data-th-attr="data-product-price=${product.buyingPrice}, data-product-order-quantity=${product.orderQuantity}"  th:value="${product.id}">
                                             </td>
                                             
                                             <td th:text="${product.id}" class="px-6 py-4"></td>
@@ -111,7 +111,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                             <div class="flex flex-col justify-center items-center mt-6 gap-6 w-full">
                                 <div class="flex items-start gap-4 justify-start flex-col">
                                     <div class="flex flex-col gap-6">
-                                        <div class="relative">
+                                        <div id="quantityContainer" class="relative hidden">
                                             <input type="number" name="quantity" id="quantity" class="block px-2.5 pb-2 pt-3 w-full text-sm text-gray-700 bg-transparent rounded-lg border border-[#D0D5DD] focus:outline-none focus:ring-0 focus:border-[#1366D9] peer" placeholder="" autocomplete="off" required aria-label="Quantity" />
                                             <label for="quantity" class="absolute text-sm text-[#667085] duration-75 rounded-3xl bg-white mx-1 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-[#1366D9] peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4">Quantity</label>
                                         </div>
@@ -168,16 +168,19 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
             }
         }
 
-        async function getSupplierProducts(productId) {
+        async function getSupplierProducts(productId, eoqValue) {
             try {
                 const response = await fetch(`/suppliers/products?product=${productId}`);
                 const data = await response.json();
 
                 if (response.status == 200) {
                     document.getElementById('supplierContainer').classList.remove('hidden');
+                    document.getElementById('quantityContainer').classList.remove('hidden');
+                    document.getElementById('quantity').value = eoqValue;
                     const supplierSelect = document.getElementById('supplierSelect');
                     supplierSelect.innerHTML = ''; 
-
+                    quantityElement.textContent = 'x' + eoqValue;
+                    
                     const placeholder = document.createElement('option');
                     placeholder.value = '';
                     placeholder.textContent = 'Choose a supplier';
@@ -202,6 +205,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                     // }
                 } else {
                     document.getElementById('supplierContainer').classList.add('hidden');
+                    document.getElementById('quantityContainer').classList.remove('hidden');
                 }
             } catch (error) {
                 console.error('Error fetching supplier products:', error);
@@ -213,6 +217,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                 const selectedRadio = document.querySelector('input[name="product"]:checked');
                 if (selectedRadio) {
                     const thAttrValue = selectedRadio.getAttribute('data-product-price');
+                    const eoqValue = selectedRadio.getAttribute('data-product-order-quantity');
                     const productId = selectedRadio.value;
                         if (thAttrValue) {
                             productPrice = parseFloat(thAttrValue);
@@ -220,7 +225,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                                 style: 'currency', 
                                 currency: 'PHP' 
                             }).format(productPrice);
-
+                            quantity = parseInt(eoqValue);
                             buyingPrice.textContent = 'Supplier Price: ' + formattedPrice;
                         }
                         if(quantity != 0) {
@@ -230,7 +235,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                         }
                         
                         updateTotalPrice();
-                        getSupplierProducts(productId);
+                        getSupplierProducts(productId, eoqValue);
                         }
             });
         });

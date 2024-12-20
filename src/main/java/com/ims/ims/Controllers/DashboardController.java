@@ -3,7 +3,10 @@ package com.ims.ims.Controllers;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,8 +39,10 @@ public class DashboardController {
         List<BuyOrder> pendingBuyOrders = new ArrayList<>();
         List<Inventory> lowQuantityProducts = new ArrayList<>();
         List<Inventory> inventoryList = inventoryService.getAllInventoryItems();
+        List<Inventory> filteredInventoryList = inventoryList.stream().filter(product -> product.getQuantity() != 0)
+        .collect(Collectors.toList());  
         List<Supplier> suppliers = supplierService.getAllSuppliers();
-
+        Map<Long, Integer> productOrderQuantities = new HashMap<>();
 
     
         
@@ -45,25 +50,35 @@ public class DashboardController {
         NumberFormat numberFormat = NumberFormat.getIntegerInstance();
         int count = 0;
         Integer totalQuantity = 0;
-        Integer quantitiesToBeRecieved = 0;
         Integer suppliersCount = suppliers.size();
         Integer purchaseCount = buyOrders.size();
         Double totalPurchaseCost = 0.0;
-
         for (BuyOrder order : buyOrders) {
-        if ("Pending".equals(order.getStatus())) {
-            pendingBuyOrders.add(order);
-            quantitiesToBeRecieved += order.getQuantity();
-        }
-        if (order.getBackOrderQuantity() != 0) {
-            quantitiesToBeRecieved += order.getBackOrderQuantity();
-        }
-        if (order.getBadOrderQuantity() != 0) {
-            quantitiesToBeRecieved += order.getBadOrderQuantity();
-        }
+            for (Inventory product : inventoryList) {   
+                int productTotalOrderQuantity = productOrderQuantities.getOrDefault(product.getId(), 0);
 
-        totalPurchaseCost += order.getTotalAmount();
+                if (order.getProduct().getId().equals(product.getId())) {
+                    if ("Pending".equals(order.getStatus())) {
+                        pendingBuyOrders.add(order);
+                        productTotalOrderQuantity += order.getQuantity();
+                    }
+                    if (order.getBackOrderQuantity() != 0) {
+                        productTotalOrderQuantity += order.getBackOrderQuantity();
+                    }
+                    if (order.getBadOrderQuantity() != 0) {
+                        productTotalOrderQuantity += order.getBadOrderQuantity();
+                    }
+                }
+        
+                // Update the map with the correct total for this product
+                productOrderQuantities.put(product.getId(), productTotalOrderQuantity);
+        
+                // Accumulate the total purchase cost
+                totalPurchaseCost += order.getTotalAmount();
+            }
+
         }
+          
 
         for (Inventory product : inventoryList) {
             totalQuantity += product.getQuantity();
@@ -82,7 +97,8 @@ public class DashboardController {
         model.addAttribute("purchaseCount", numberFormat.format(purchaseCount));
         model.addAttribute("totalSuppliers", numberFormat.format(suppliersCount));
         model.addAttribute("totalQuantity", numberFormat.format(totalQuantity));
-        model.addAttribute("quantitiesToBeRecieved", numberFormat.format(quantitiesToBeRecieved));
+        model.addAttribute("productOrderQuantities", productOrderQuantities);
+        model.addAttribute("products", filteredInventoryList);
         model.addAttribute("lowQuantityProducts", lowQuantityProducts);
         model.addAttribute("orders", pendingBuyOrders);
         model.addAttribute("currentPage", "/dashboard");

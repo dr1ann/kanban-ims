@@ -27,6 +27,8 @@ public class Inventory {
     private Integer quantity;
     private String unit;
     private Integer threshold;
+    private Double eoq;
+    private Integer orderQuantity;
     
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -108,6 +110,22 @@ public class Inventory {
     
     public void setCategory(ProductCategory category) {
         this.category = category;
+    }
+
+    public double getEoq() {
+        return eoq;
+    }
+
+    public void setEoq(double eoq) {
+        this.eoq = eoq;
+    }
+
+    public int getOrderQuantity() {
+        return orderQuantity;
+    }
+
+    public void setOrderQuantity(int orderQuantity) {
+        this.orderQuantity = orderQuantity;
     }
     
      // Formatted getters

@@ -9,26 +9,40 @@
                     <span class="sr-only">Close modal</span>
                 </button>
                 <i class="text-[#667085] text-[2.75rem] mb-3.5 fa-solid fa-check-to-slot"></i>
-                <p th:if="${order.backOrderQuantity == 0 && order.badOrderQuantity == 0}" class="mb-4 text-sm text-gray-500">
-                    <span  th:utext="'Are you sure you want to mark <b>ORDER ID ' + ${order.id} + '</b> as <b>RECEIVED</b>?<br>This confirms that the expected quantity has been successfully delivered and accepted.'"></span>
+                <p class="mb-4 text-sm text-gray-500">
+                    <span th:utext="'Are you sure you want to mark <b>ORDER ID ' + ${order.id} + '</b> as <b>RECEIVED</b>?<br>' +
+                    'If yes, please provide the <b>quantity received</b>, along with any <b>back order</b> or <b>bad order</b> quantities, if applicable.'"></span>
                     <br><br>
-                    This action makes the order <b>uneditable</b>.
-                </p>
-                <p th:if="${order.backOrderQuantity != 0}" class="mb-4 text-sm text-gray-500">
-                    <span th:utext="'Are you sure you want to mark <b>ORDER ID ' + ${order.id} + '</b> as <b>RECEIVED</b>?<br>This confirms that all backordered quantity, have been successfully delivered and accepted.'"></span>
-                    <br><br>
-                    This action finalizes the transaction and makes the status <b>uneditable</b>.
-                </p>
-                <p th:if="${order.badOrderQuantity != 0}" class="mb-4 text-sm text-gray-500">
-                    <span th:utext="'Are you sure you want to mark <b>ORDER ID ' + ${order.id} + '</b> as <b>RECEIVED</b>?<br>This confirms that all defective items reported as bad orders have been successfully replaced or accounted for.'"></span> 
-                    <br><br>
-                    This action finalizes the transaction and makes the status <b>uneditable</b>.
-                </p>
-                <form th:action="@{/buy-order/edit-status/{id}(id=${order.id})}" method="post" enctype="multipart/form-data">
+                    Once confirmed, this action will make the status and order <b>uneditable</b>.
+                </p>               
+                <form 
+                    th:action="@{/buy-order/edit-status/{id}(id=${order.id})}" 
+                    method="post" 
+                    enctype="multipart/form-data" 
+                    id="confirmModalForm-${order.id}" 
+                    data-confirm-modal="backOrderModal-${order.id}">
+                    
                     <input type="hidden" name="orderId" th:value="${order.id}">
-                    <input type="hidden" name="formType" value="receiveOrder">
+                    <input type="hidden" name="totalQuantityToReceive" th:id="'totalQuantityToReceive_' + ${order.id}" th:value="${order.quantity}">
+
+                    <div class="relative flex w-1/2 mx-auto">
+                        <input type="number" name="receivedQuantity" th:id="'receivedQuantity-' + ${order.id}" class="block px-2.5 pb-2 pt-3 w-full text-sm text-gray-700 bg-transparent rounded-lg border border-[#D0D5DD] focus:outline-none focus:ring-0 focus:border-[#1366D9] peer" placeholder="" autocomplete="off" required aria-label="Received Quantity" />
+                        <label for="receivedQuantity-${order.id}" class="absolute text-sm text-[#667085] duration-75 rounded-3xl bg-white mx-1 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-[#1366D9] peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4">Received</label>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mt-6 mb-8 w-[90%] mx-auto">
+                        <div class="relative flex">
+                            <input type="number" name="backOrderQuantity" th:id="'backOrderQuantity-' + ${order.id}" class="block px-2.5 pb-2 pt-3 w-full text-sm text-gray-700 bg-transparent rounded-lg border border-[#D0D5DD] focus:outline-none focus:ring-0 focus:border-[#1366D9] peer" placeholder="" autocomplete="off" aria-label="Back Order Quantity" />
+                            <label for="backOrderQuantity-${order.id}" class="absolute text-sm text-[#667085] duration-75 rounded-3xl bg-white mx-1 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-[#1366D9] peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4">Back Order</label>
+                        </div>
+                        <div class="relative flex">
+                            <input type="number" name="badOrderQuantity" id="badOrderQuantity-${order.id}" class="block px-2.5 pb-2 pt-3 w-full text-sm text-gray-700 bg-transparent rounded-lg border border-[#D0D5DD] focus:outline-none focus:ring-0 focus:border-[#1366D9] peer" placeholder="" autocomplete="off" aria-label="Bad Order Quantity" />
+                            <label for="badOrderQuantity-${order.id}" class="absolute text-sm text-[#667085] duration-75 rounded-3xl bg-white mx-1 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-[#1366D9] peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4">Bad Order</label>
+                        </div>
+                    </div>
+
                     <div class="flex justify-center items-center space-x-4">
-                        <button type="button" th:onclick="|closeModal('receiveOrderModal' + ${order.id})|" 
+                        <button type="button" th:onclick="|closeModal('backOrderModal' + ${order.id})|"
                         class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10">
                         Cancel
                         </button>
@@ -37,7 +51,32 @@
                         </button>
                     </div>
                 </form>
+
             </div>
         </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('[id^="receivedQuantity-"]').forEach(receivedQuantityInput => {
+                    receivedQuantityInput.addEventListener('input', function () {
+                        const orderId = this.id.split('-')[1]; 
+                        const totalQuantity = parseInt(document.getElementById(`totalQuantityToReceive_${orderId}`).value);
+                        const receivedQuantity = parseInt(this.value) || 0;
+                        
+                        const backOrderQuantity = totalQuantity > receivedQuantity ? totalQuantity - receivedQuantity : 0;
+        
+                        // Update the back order quantity input field
+                        const backOrderInput = document.getElementById(`backOrderQuantity-${orderId}`);
+                        if (backOrderInput) {
+                            if (parseInt(backOrderInput.value) == 0) {
+                                backOrderInput.value = '';
+                            } else {
+                                backOrderInput.value = backOrderQuantity;
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
+        
     </div>
 </div>

@@ -6,15 +6,13 @@ import com.ims.ims.Entities.Supplier;
 import com.ims.ims.Services.BuyOrderService;
 import com.ims.ims.Services.InventoryService;
 import com.ims.ims.Services.SupplierService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,6 +37,14 @@ public class BuyOrderController {
         return "buy-order/buy-order-list";
     }
 
+    @GetMapping("/buy-order/receive")
+    public String viewAllBuyOrdersToReceive(Model model) {
+        List<BuyOrder> buyOrders = buyOrderService.getAllBuyOrders();
+        model.addAttribute("orders", buyOrders);
+        model.addAttribute("currentPage", "/receive-order");
+        return "buy-order/receive-order-list";
+    }
+
     @GetMapping("/buy-order/data")
     @ResponseBody
     public List<BuyOrder> exportBuyOrders(Model model) {
@@ -47,69 +53,63 @@ public class BuyOrderController {
     }
 
     @PostMapping("/buy-order/edit-status/{id}")
-    public String editBuyOrderStatus(@RequestParam("orderId") Long orderId, @RequestParam("formType") String formType, @RequestParam(value = "backOrderQuantity", required = false) Integer backOrderQuantity,  @RequestParam(value = "badOrderQuantity", required = false) Integer badOrderQuantity, RedirectAttributes redirectAttributes) {
+    public String editBuyOrderStatus(@RequestParam("orderId") Long orderId, @RequestParam("receivedQuantity") String receivedQuantity, @RequestParam(name= "backOrderQuantity", required = false) String backOrderQuantity,  @RequestParam(name= "badOrderQuantity", required = false) String badOrderQuantity, Model model, RedirectAttributes redirectAttributes) {
         BuyOrder orderToUpdate = buyOrderService.getBuyOrderById(orderId);
         Integer orderQuantity = orderToUpdate.getQuantity();
         Inventory currentProductToUpdate = orderToUpdate.getProduct();
         Integer currentProductQuantity = orderToUpdate.getProduct().getQuantity();
-        if ("receiveOrder".equals(formType)) {
-            if(orderToUpdate.getBackOrderQuantity() != 0) {
-                currentProductToUpdate.setQuantity(currentProductQuantity + orderToUpdate.getBackOrderQuantity());
-            } else if(orderToUpdate.getBadOrderQuantity() != 0) {
-                currentProductToUpdate.setQuantity(currentProductToUpdate.getQuantity() + orderToUpdate.getBadOrderQuantity());
-            } else {
-                currentProductToUpdate.setQuantity(currentProductQuantity + orderQuantity);
+        Integer totalQuantitiesInput = 0;
+        Integer receivedQuantityInt = Integer.parseInt(receivedQuantity);
+        totalQuantitiesInput += receivedQuantityInt;
+        
+        StringBuilder statusBuilder = new StringBuilder("Received");
+        if (orderToUpdate.getBackOrderQuantity() != 0 || orderToUpdate.getBadOrderQuantity() != 0 ) {
+            orderQuantity = orderToUpdate.getBackOrderQuantity() + orderToUpdate.getBadOrderQuantity();
+        }
+
+        if (backOrderQuantity != null && !backOrderQuantity.trim().isEmpty()) {
+            Integer backOrderQuantityInt = Integer.parseInt(backOrderQuantity);
+            totalQuantitiesInput += backOrderQuantityInt;
+            orderToUpdate.setBackOrderQuantity(backOrderQuantityInt);
+            statusBuilder.append(", ").append(backOrderQuantityInt).append(" Back Order(s)");
+        }
+    
+        if (badOrderQuantity != null && !badOrderQuantity.trim().isEmpty()) {
+            Integer badOrderQuantityInt = Integer.parseInt(badOrderQuantity);
+            totalQuantitiesInput += badOrderQuantityInt;
+            orderToUpdate.setBadOrderQuantity(badOrderQuantityInt);
+            statusBuilder.append(", ").append(badOrderQuantityInt).append(" Bad Order(s)");
+        }
+
+        if (totalQuantitiesInput.equals(orderQuantity)) {
+            orderToUpdate.setStatus(statusBuilder.toString());
+            receivedQuantityInt += currentProductQuantity;
+            currentProductToUpdate.setQuantity(receivedQuantityInt);
+            inventoryService.updateInventoryQuantity(currentProductToUpdate.getId(), currentProductToUpdate);
+          
+        
+            StringBuilder messageBuilder = new StringBuilder("Order ID " + orderId + " has been updated. ");
+            messageBuilder.append(totalQuantitiesInput).append(" item(s) processed, " + receivedQuantityInt + " received");
+
+            if (backOrderQuantity != null && !backOrderQuantity.trim().isEmpty()) {
+                messageBuilder.append(", including ").append(backOrderQuantity).append(" Back Order(s)");
             }
-            inventoryService.updateInventoryQuantity(currentProductToUpdate.getId(), currentProductToUpdate); 
-            
+
+            if (badOrderQuantity != null && !badOrderQuantity.trim().isEmpty()) {
+                messageBuilder.append(", including ").append(badOrderQuantity).append(" Bad Order(s)");
+            }
             orderToUpdate.setBackOrderQuantity(0);
             orderToUpdate.setBadOrderQuantity(0);
-            orderToUpdate.setStatus("Received");
-            orderToUpdate.setReceiveDate(LocalDateTime.now());
             buyOrderService.updateBuyOrder(orderId, orderToUpdate);
-            redirectAttributes.addFlashAttribute("message", "Order ID " + orderId + " received successfully! Product quantity updated."); 
-        }
 
-        if ("backOrder".equals(formType)) {
-            if (backOrderQuantity > orderQuantity) {
-                redirectAttributes.addFlashAttribute("errorMessage", "Order ID " +  orderId + " Error: Backorder quantity cannot exceed the total order quantity.");
-                return "redirect:/buy-order/list"; 
-            }
+            // Add flash attribute with the confirmation message
+            redirectAttributes.addFlashAttribute("message", messageBuilder.toString());
 
-            Integer updatedQuantity = currentProductQuantity + (orderQuantity - backOrderQuantity);  
-            currentProductToUpdate.setQuantity(updatedQuantity);
-            inventoryService.updateInventoryQuantity(currentProductToUpdate.getId(), currentProductToUpdate); 
-            
-            orderToUpdate.setStatus(backOrderQuantity + " Back Order(s)");
-            orderToUpdate.setBackOrderQuantity(backOrderQuantity);
-            buyOrderService.updateBuyOrder(orderId, orderToUpdate);
-            redirectAttributes.addFlashAttribute("message", "Order ID " + orderId + " has been updated. " + (orderQuantity - backOrderQuantity) + " item(s) delivered, and " + backOrderQuantity + " item(s) are pending delivery. Product quantity updated.");
+            return "redirect:/inventory/products";
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error: The total quantities (received, back orders, and bad orders) do not match the order quantity.");
+            return "redirect:/buy-order/receive";
         }
-
-        if ("badOrder".equals(formType)) {
-            if (badOrderQuantity > orderQuantity) {
-                redirectAttributes.addFlashAttribute("errorMessage", "Order ID " + orderId + " Error: Bad order quantity cannot exceed the total order quantity.");
-                return "redirect:/buy-order/list";
-            }
-        
-            // Update the quantity only with successfully delivered items
-            Integer updatedQuantity = currentProductQuantity + (orderQuantity - badOrderQuantity);  
-            currentProductToUpdate.setQuantity(updatedQuantity);
-            inventoryService.updateInventoryQuantity(currentProductToUpdate.getId(), currentProductToUpdate); 
-            
-            // Set the status to reflect the bad items separately
-            orderToUpdate.setStatus(badOrderQuantity + " Bad Order(s)");
-            orderToUpdate.setBadOrderQuantity(badOrderQuantity);
-            buyOrderService.updateBuyOrder(orderId, orderToUpdate);
-        
-            redirectAttributes.addFlashAttribute("message", "Order ID " + orderId + " has been updated. " 
-                                                  + (orderQuantity - badOrderQuantity) + " item(s) delivered successfully. "
-                                                  + badOrderQuantity + " bad item(s) will be replaced. Product quantity updated.");
-        }
-        
-        
-        
-        return "redirect:/inventory/products";
     }
 
 
@@ -123,7 +123,7 @@ public class BuyOrderController {
         List<Inventory> stockFilteredInventory = inventoryList.stream()
             .filter(product -> statusesToFilter.contains(product.getStockStatus()))
             .collect(Collectors.toList());
-            
+
         // Get supplier products
         Set<String> supplierProducts = suppliers.stream()
             .flatMap(supplier -> supplier.getProductsProvided().stream())
@@ -133,10 +133,29 @@ public class BuyOrderController {
         List<Inventory> finalFilteredInventoryList = stockFilteredInventory.stream()
             .filter(product -> supplierProducts.contains(product.getName()))
             .collect(Collectors.toList());
-    
+
+        // Constants for EOQ calculation
+        double orderCost = 100.0;  // Example order cost per purchase order (can be dynamic)
+        double holdingCost = 5.0;  // Example holding cost per unit per year (can be dynamic)
+
+        // Randomize annual demand and calculate EOQ for each product, then automate quantity to order
+        Random random = new Random();
+        finalFilteredInventoryList.forEach(product -> {
+            int annualDemand = random.nextInt(1000) + 100;  // Random demand between 100 and 1000 units
+            
+            // Calculate EOQ using the formula
+            double eoq = Math.sqrt((2 * annualDemand * orderCost) / holdingCost);
+
+            // Automate the quantity to order based on EOQ
+            product.setOrderQuantity((int) eoq);  // Setting the order quantity as EOQ (rounding to nearest int)
+
+            // Optionally, you can store the EOQ value if needed
+            product.setEoq(eoq);  // Assuming you have a setEoq method in your Inventory class
+        });
+
         model.addAttribute("products", finalFilteredInventoryList);
         model.addAttribute("currentPage", "/add-buy-order");
-    
+
         return "/buy-order/add-buy-order";
     }
     
@@ -273,4 +292,26 @@ public class BuyOrderController {
         return "buy-order/reorder-buy-order"; 
     }
 
+    @PostMapping("/buy-order/cancel-order/{id}")
+    public String cancelBuyOrder(@PathVariable("id") Long id, @RequestParam("cancelOrderReason") String cancelOrderReason, RedirectAttributes redirectAttributes) {
+        try {
+            buyOrderService.cancelBuyOrderTransaction(id, cancelOrderReason);
+            redirectAttributes.addFlashAttribute("message", "Order cancelled successfully!");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/buy-order/list";
+    }
+    
+    @PostMapping("/buy-order/delete-order/{id}")
+    public String deleteBuyOrder(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            buyOrderService.deleteBuyOrderTransaction(id);
+            redirectAttributes.addFlashAttribute("message", "Transaction removed successfully!");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/buy-order/list";
+    }
+    
 }

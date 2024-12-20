@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
 xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head> 
-    <title>Transactions List | Purchase Order | IMS</title> 
+    <title>Receive Order | Purchase Order | IMS</title> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">    
     <link rel="stylesheet" th:href="@{/css/output.tailwind.css}">
@@ -24,7 +24,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                             <span class="text-[#667085] mx-2">/</span>
                         </li>
                         <li>
-                            <a href="/buy-order/list" class="hover:underline text-sm font-medium text-[#1366D9]">Transactions List</a>
+                            <a href="/buy-order/receive" class="hover:underline text-sm font-medium text-[#1366D9]">Receive Order</a>
                         </li>
                     </ol>
                 </div>
@@ -60,17 +60,17 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
                 </div>
                 <div th:if="${!orders.empty}">
                     <div class="flex flex-wrap gap-4 items-center justify-between mb-6 mt-3 mx-[.4rem]">
-                        <h1 class="text-gray-700 font-medium text-xl">Transactions</h1>
-                        <div class="flex gap-3">
+                        <h1 class="text-gray-700 font-medium text-xl">Receive Order</h1>
+                        <!-- <div class="flex gap-3">
                             <a href="/buy-order/add" class="hidden lg:block text-sm bg-[#1366D9] shadow px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9]">
                                 <i class="fa-solid fa-plus"></i> Add Order
                             </a>
                             <button onclick="exportToExcel()" class="hidden lg:block text-sm bg-[#1366D9] shadow px-3 py-1 text-white rounded-lg border border-[#1366D9] transition-colors duration-300 hover:bg-transparent hover:text-[#1366D9]">
                                 <i class="fa-solid fa-file-export"></i> Export
                             </button>
-                        </div>                 
+                        </div>                  -->
                     </div>
-                    <div th:replace="/buy-order/buy-order-table :: buy-order-table"></div>
+                    <div th:replace="/buy-order/receive-order-table :: receive-order-table"></div>
                 </div>
                 <div th:if="${orders.empty}" class="mt-10 flex flex-col lg:flex-row justify-center items-center">
                     <img src="/images/empty.png" class="w-[24rem] h-auto" alt="Empty Image">
@@ -98,7 +98,7 @@ xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
         document.addEventListener("DOMContentLoaded", function(event) {
             const deleteButtons = document.querySelectorAll('[id^="deleteBuyOrderButton"]');
             const cancelButtons = document.querySelectorAll('[id^="cancelBuyOrderButton"]');
-
+    
             cancelButtons.forEach(button => {
                 button.addEventListener('click', function() {
 
